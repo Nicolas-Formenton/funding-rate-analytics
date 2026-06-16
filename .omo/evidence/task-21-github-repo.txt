@@ -1,0 +1,17 @@
+TASK: GitHub Repo Init + Push
+DATE: 2026-06-16
+
+RESULTS:
+- Git repo initialized: YES
+- GitHub repo created: YES (Nicolas-Formenton/funding-rate-analytics)
+- Visibility: PUBLIC
+- URL: https://github.com/Nicolas-Formenton/funding-rate-analytics
+- Description: Historical funding rate analytics for crypto + equity perpetual futures: 260K+ observations, 5 venues, dbt pipeline, interactive dashboards, and hypothesis testing
+- First commit: cb68e97 — "Initial commit: Historical Funding Rate Analytics — crypto + equity perpetual futures"
+- Files committed: 325 (no raw data, no CSV, no .env credentials)
+- Topics (10): funding-rates, perpetual-futures, crypto, dbt, postgresql, data-engineering, quantitative-finance, equity-perps, analytics, deepnote
+
+VERIFICATION:
+- gh repo view --json url,description,visibility,repositoryTopics: PASS
+- git ls-files | grep -E "\.csv$|\.zip$|/raw/" : CLEAN (no data files)
+- git status: CLEAN (working tree clean)
