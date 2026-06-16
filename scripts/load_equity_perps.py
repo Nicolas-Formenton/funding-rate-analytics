@@ -566,7 +566,7 @@ def main() -> int:
     log.info("Working venues: %s", working or "(none)")
     log.info("Elapsed: %.1fs", time.time() - started)
 
-    print(json.dumps(
+    log.info(json.dumps(
         {
             "working_venues": working,
             "total_rows_inserted": total_inserted,

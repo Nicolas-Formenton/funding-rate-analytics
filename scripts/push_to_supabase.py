@@ -15,10 +15,13 @@ Requires:
     - SUPABASE_URL environment variable set
 """
 
+import logging
 import os
 import subprocess
 import sys
 import time
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 LOCAL_URL = "postgresql://postgres:postgres@localhost:5432/funding_rates"
 
@@ -31,12 +34,12 @@ SCHEMAS_WITH_TABLES = {
 
 def run(cmd: str, label: str = "", check: bool = True) -> subprocess.CompletedProcess:
     """Run a shell command with optional label for logging."""
-    print(f"  → {label or cmd}")
+    logging.info("  → %s", label or cmd)
     result = subprocess.run(cmd, shell=True, capture_output=False, text=True)
     if check and result.returncode != 0:
-        print(f"  ✗ ERROR (exit {result.returncode})")
+        logging.error("  ✗ ERROR (exit %s)", result.returncode)
         if result.stderr:
-            print(f"    stderr: {result.stderr[:500]}")
+            logging.error("    stderr: %s", result.stderr[:500])
         sys.exit(result.returncode)
     return result
 
@@ -60,7 +63,7 @@ def get_local_row_counts() -> dict[str, int]:
     )
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if result.returncode != 0:
-        print(f"  ⚠ Could not query row counts: {result.stderr[:200]}")
+        logging.warning("  ⚠ Could not query row counts: %s", result.stderr[:200])
         return counts
     for line in result.stdout.strip().splitlines():
         line = line.strip()
@@ -73,17 +76,17 @@ def get_local_row_counts() -> dict[str, int]:
 
 def push_ddl() -> None:
     """Push schema DDL (no data) to Supabase — raw first, then staging, then marts."""
-    print("  Schema: raw tables...")
+    logging.info("  Schema: raw tables...")
     run(
         f'pg_dump "{LOCAL_URL}" --schema-only --schema=raw | psql "{SUPABASE_URL}"',
         label="raw tables DDL",
     )
-    print("  Schema: staging views...")
+    logging.info("  Schema: staging views...")
     run(
         f'pg_dump "{LOCAL_URL}" --schema-only --schema=staging | psql "{SUPABASE_URL}"',
         label="staging views DDL",
     )
-    print("  Schema: marts tables...")
+    logging.info("  Schema: marts tables...")
     run(
         f'pg_dump "{LOCAL_URL}" --schema-only --schema=marts | psql "{SUPABASE_URL}"',
         label="marts tables DDL",
@@ -92,12 +95,12 @@ def push_ddl() -> None:
 
 def push_data() -> None:
     """Push data rows for raw and marts schemas (staging is views only)."""
-    print("  Data: raw tables...")
+    logging.info("  Data: raw tables...")
     run(
         f'pg_dump "{LOCAL_URL}" --data-only --schema=raw | psql "{SUPABASE_URL}"',
         label="raw data",
     )
-    print("  Data: marts tables...")
+    logging.info("  Data: marts tables...")
     run(
         f'pg_dump "{LOCAL_URL}" --data-only --schema=marts | psql "{SUPABASE_URL}"',
         label="marts data",
@@ -106,7 +109,7 @@ def push_data() -> None:
 
 def verify_counts() -> bool:
     """Compare row counts between local and Supabase."""
-    print("  Verifying row counts...")
+    logging.info("  Verifying row counts...")
     verify_queries = []
     for schema, tables in SCHEMAS_WITH_TABLES.items():
         if schema == "staging":
@@ -123,7 +126,7 @@ def verify_counts() -> bool:
     remote_result = subprocess.run(remote_cmd, shell=True, capture_output=True, text=True)
 
     if local_result.returncode != 0 or remote_result.returncode != 0:
-        print("  ⚠ Verification query failed — check connectivity")
+        logging.warning("  ⚠ Verification query failed — check connectivity")
         return False
 
     local_counts: dict[str, int] = {}
@@ -150,7 +153,7 @@ def verify_counts() -> bool:
         status = "✓" if lc == rc else "✗ MISMATCH"
         if lc != rc:
             all_ok = False
-        print(f"    {status} {tbl}: local={lc}  remote={rc}")
+        logging.info("    %s %s: local=%s  remote=%s", status, tbl, lc, rc)
 
     return all_ok
 
@@ -159,38 +162,38 @@ def main() -> None:
     global SUPABASE_URL
     SUPABASE_URL = os.environ.get("SUPABASE_URL")
     if not SUPABASE_URL:
-        print("ERROR: SUPABASE_URL environment variable is not set.")
-        print("  export SUPABASE_URL='postgresql://postgres.xxxxx:password@...'")
+        logging.error("SUPABASE_URL environment variable is not set.")
+        logging.error("  export SUPABASE_URL='postgresql://postgres.xxxxx:password@...'")
         sys.exit(1)
 
-    print("=" * 60)
-    print("  Push local Docker PG → Supabase")
-    print("=" * 60)
+    logging.info("=" * 60)
+    logging.info("  Push local Docker PG → Supabase")
+    logging.info("=" * 60)
 
     # Phase 0: Gather local row counts for progress logging
-    print("\n[0/4] Gathering local row counts...")
+    logging.info("[0/4] Gathering local row counts...")
     counts = get_local_row_counts()
     total_rows = sum(counts.values())
     for tbl, cnt in counts.items():
-        print(f"    {tbl}: {cnt:,} rows")
-    print(f"    Total: {total_rows:,} rows")
+        logging.info("    %s: %s rows", tbl, f"{cnt:,}")
+    logging.info("    Total: %s rows", f"{total_rows:,}")
 
     # Phase 1: Push DDL
-    print(f"\n[1/4] Pushing DDL ({len(SCHEMAS_WITH_TABLES)} schemas)...")
+    logging.info("[1/4] Pushing DDL (%d schemas)...", len(SCHEMAS_WITH_TABLES))
     start = time.time()
     push_ddl()
-    print(f"    ✓ DDL pushed ({time.time() - start:.1f}s)")
+    logging.info("    ✓ DDL pushed (%.1fs)", time.time() - start)
 
     # Phase 2: Push data
-    print(f"\n[2/4] Pushing data ({total_rows:,} rows)...")
+    logging.info("[2/4] Pushing data (%s rows)...", f"{total_rows:,}")
     start = time.time()
     push_data()
-    print(f"    ✓ Data pushed ({time.time() - start:.1f}s)")
+    logging.info("    ✓ Data pushed (%.1fs)", time.time() - start)
 
     # Phase 3: Verify
-    print(f"\n[3/4] Verifying data integrity...")
+    logging.info("[3/4] Verifying data integrity...")
     ok = verify_counts()
-    print(f"\n[4/4] {'✓ Push complete — all counts match!' if ok else '⚠ Push completed but counts differ. Check logs above.'}")
+    logging.info("[4/4] %s", "✓ Push complete — all counts match!" if ok else "⚠ Push completed but counts differ. Check logs above.")
 
     if not ok:
         sys.exit(1)

@@ -1,6 +1,7 @@
 # data
 data/raw/
 *.csv
+!data/sample/*.csv
 *.zip
 
 # environment

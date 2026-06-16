@@ -242,10 +242,10 @@ def main():
     results = load_all(args.symbols, args.start, args.end, dry_run=args.dry_run)
 
     # Print summary
-    print("\n=== Summary ===")
+    log.info("=== Summary ===")
     for r in results:
-        print(f"  {r['symbol']}: {r['total_rows']} rows, {r['loaded_months']} months loaded, {r['skipped_months']} skipped")
-    print(f"  Grand total: {sum(r['total_rows'] for r in results)} rows")
+        log.info("  %s: %d rows, %d months loaded, %d skipped", r['symbol'], r['total_rows'], r['loaded_months'], r['skipped_months'])
+    log.info("  Grand total: %d rows", sum(r['total_rows'] for r in results))
 
 
 if __name__ == "__main__":
