@@ -1,0 +1,37 @@
+# Task 6 — Binance Historical Ingestion Evidence
+
+> Date: 2026-06-16
+> Script: scripts/load_binance.py
+> Tests: tests/test_load_binance.py
+
+## Row Counts
+
+```
+ symbol  | row_count |          earliest          |           latest           | months_covered 
+---------+-----------+----------------------------+----------------------------+----------------
+ BTCUSDT |      7029 | 2020-01-01 00:00:00+00     | 2026-05-31 16:00:00.004+00 |             77
+ ETHUSDT |      7029 | 2020-01-01 00:00:00+00     | 2026-05-31 16:00:00.004+00 |             77
+ SOLUSDT |      6334 | 2020-09-13 16:00:00.004+00 | 2026-05-31 16:00:00.004+00 |             69
+
+ Total: 20,392 rows
+```
+
+## Requirements Checklist
+
+- [x] BTCUSDT: 7,029 rows (>7,000 ✓)
+- [x] ETHUSDT: 7,029 rows (>7,000 ✓)
+- [x] SOLUSDT: 6,334 rows (>4,000 ✓)
+- [x] BTCUSDT min(ts): 2020-01-01 ≤ 2020-02-01 ✓
+- [x] Idempotent: DELETE-per-symbol + re-INSERT strategy ✓
+- [x] Script handles 404 for unavailable months (SOLUSDT started 2020-09) ✓
+- [x] All 3 symbols present ✓
+
+## Notes
+
+- SOLUSDT data starts at 2020-09 (9 months skipped before listing existed)
+- BTCUSDT + ETHUSDT: 1 month skipped (2026-06 — current month, ZIP not yet available)
+- CSV format: calc_time (ms), funding_interval_hours (always 8), last_funding_rate (decimal)
+- No mark_price or index_price in historical CSV — those columns are NULL
+- ~90 rows/month at 8h funding intervals; Feb has ~84-87 (28-29 days)
+- Total download size: ~234KB for all 78 months × 3 symbols
+- Full load time: ~3 min 13 sec

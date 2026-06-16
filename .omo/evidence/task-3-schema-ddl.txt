@@ -1,0 +1,106 @@
+Task 3: Schema Design — DDL Execution Evidence
+================================================
+
+Date: 2026-06-16
+Database: funding_rates (PostgreSQL 16, Docker container: funding-rates-pg)
+
+## 01_raw.sql Execution
+
+```
+$ docker exec -i funding-rates-pg psql -U postgres -d funding_rates < schemas/01_raw.sql
+CREATE SCHEMA
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+```
+
+Result: SUCCESS — raw schema created with 4 tables
+
+## 02_staging.sql Execution
+
+```
+$ docker exec -i funding-rates-pg psql -U postgres -d funding_rates < schemas/02_staging.sql
+CREATE SCHEMA
+CREATE VIEW
+```
+
+Result: SUCCESS — staging schema created with unified view
+
+## 03_marts.sql Execution
+
+```
+$ docker exec -i funding-rates-pg psql -U postgres -d funding_rates < schemas/03_marts.sql
+CREATE SCHEMA
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+```
+
+Result: SUCCESS — marts schema created with 3 tables
+
+## Verification: Raw Tables
+
+```
+$ docker exec funding-rates-pg psql -U postgres -d funding_rates -c "\dt raw.*"
+List of relations
+ Schema |         Name         | Type  |  Owner   
+--------+----------------------+-------+----------
+ raw    | funding_binance      | table | postgres
+ raw    | funding_deribit      | table | postgres
+ raw    | funding_equity_perps | table | postgres
+ raw    | funding_hyperliquid  | table | postgres
+(4 rows)
+```
+
+## Verification: Staging View
+
+```
+$ docker exec funding-rates-pg psql -U postgres -d funding_rates -c "\dv staging.*"
+List of relations
+ Schema  |        Name        | Type |  Owner   
+---------+--------------------+------+----------
+ staging | stg_funding_events | view | postgres
+(1 row)
+```
+
+## Verification: Marts Tables
+
+```
+$ docker exec funding-rates-pg psql -U postgres -d funding_rates -c "\dt marts.*"
+List of relations
+ Schema |         Name          | Type  |  Owner   
+--------+-----------------------+-------+----------
+ marts | mart_daily_funding    | table | postgres
+ marts | mart_hourly_funding   | table | postgres
+ marts | mart_venue_comparison | table | postgres
+(3 rows)
+```
+
+## Verification: Staging View Structure (asset_class column)
+
+```
+$ docker exec funding-rates-pg psql -U postgres -d funding_rates -c "\d staging.stg_funding_events"
+View "staging.stg_funding_events"
+           Column            |           Type           | Collation | Nullable | Default 
+-----------------------------+--------------------------+-----------+----------+---------
+ venue                       | text                     |           |          | 
+ symbol                      | character varying        |           |          | 
+ asset_class                 | text                     |           |          | 
+ interval_start              | timestamp with time zone |           |          | 
+ interval_hours              | numeric                  |           |          | 
+ funding_rate_raw            | numeric(12,8)            |           |          | 
+ funding_rate_annualized_pct | numeric                  |           |          | 
+ mark_price                  | numeric(18,4)            |           |          | 
+ index_price                 | numeric                  |           |          | 
+ premium_bps                 | numeric                  |           |          | 
+ _loaded_at                  | timestamp with time zone |           |          | 
+```
+
+## Summary
+
+✅ All 3 DDL files executed without errors
+✅ 4 raw tables created (funding_binance, funding_hyperliquid, funding_deribit, funding_equity_perps)
+✅ 1 staging view created (stg_funding_events) with asset_class discriminator column
+✅ 3 mart tables created (mart_hourly_funding, mart_daily_funding, mart_venue_comparison)
+✅ All schemas (raw, staging, marts) created successfully

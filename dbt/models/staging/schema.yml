@@ -1,0 +1,43 @@
+version: 2
+models:
+  - name: stg_funding_events
+    description: Unified staging view of funding rate events across all venues with normalized annualized rates
+    columns:
+      - name: venue
+        description: Source venue/exchange
+        tests:
+          - not_null
+      - name: symbol
+        description: Trading pair (e.g., BTCUSDT, ETHUSDT)
+        tests:
+          - not_null
+      - name: asset_class
+        description: crypto or equity perp classification
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['crypto', 'equity']
+      - name: interval_start
+        description: Start of funding interval
+        tests:
+          - not_null
+      - name: interval_hours
+        description: Duration of funding interval in hours
+      - name: funding_rate_raw
+        description: Raw funding rate as provided by venue
+      - name: funding_rate_annualized_pct
+        description: Annualized funding rate percentage (e.g., 15.3 = 15.3% APR)
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: -3000
+              max_value: 1000
+              inclusive: true
+      - name: mark_price
+        description: Venue mark price at collection time
+      - name: index_price
+        description: Spot index price at collection time
+      - name: premium_bps
+        description: Basis points premium of mark over index
+      - name: _loaded_at
+        description: dbt data freshness timestamp

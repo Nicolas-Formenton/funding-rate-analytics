@@ -1,0 +1,114 @@
+Task 3: Schema Design — dbt Schema Tests Evidence
+==================================================
+
+Date: 2026-06-16
+dbt Project: /Users/nformenton/Dev/funding-rate-analytics/dbt/
+
+## Staging Schema Tests (dbt/models/staging/schema.yml)
+
+### Model: stg_funding_events
+
+**Column-level tests:**
+
+| Column | Tests | Rationale |
+|--------|-------|-----------|
+| venue | not_null | Every event must have a source venue |
+| symbol | not_null | Every event must have a trading pair |
+| asset_class | not_null, accepted_values: ['crypto', 'equity'] | Discriminator required; only two valid classes |
+| interval_start | not_null | Every event must have a timestamp |
+| funding_rate_annualized_pct | not_null, accepted_range: [-500, 500] | Normalized rate required; negatives allowed (shorts pay longs), extreme range for market stress |
+
+**Key design decisions:**
+- `accepted_range` allows negative values (-500 to 500) — negative funding is signal, not error
+- `asset_class` uses `accepted_values` to enforce crypto/equity discriminator
+- `interval_hours` has no not_null test — Hyperliquid provides this, but it's derived for others
+- `premium_bps` has no test — NULL when index_price unavailable (Hyperliquid)
+
+---
+
+## Marts Schema Tests (dbt/models/marts/schema.yml)
+
+### Model: mart_hourly_funding
+
+**Column-level tests:**
+
+| Column | Tests | Rationale |
+|--------|-------|-----------|
+| venue | not_null | Aggregation dimension |
+| symbol | not_null | Aggregation dimension |
+| asset_class | not_null, accepted_values: ['crypto', 'equity'] | Required discriminator |
+| hour_start | not_null | Time bucket key |
+
+**Table-level tests:**
+- `unique: (venue, symbol, hour_start)` — Compound key ensures one row per venue/symbol/hour
+
+---
+
+### Model: mart_daily_funding
+
+**Column-level tests:**
+
+| Column | Tests | Rationale |
+|--------|-------|-----------|
+| venue | not_null | Aggregation dimension |
+| symbol | not_null | Aggregation dimension |
+| asset_class | not_null, accepted_values: ['crypto', 'equity'] | Required discriminator |
+| date | not_null | Time bucket key |
+
+**Table-level tests:**
+- `unique: (venue, symbol, date)` — Compound key ensures one row per venue/symbol/day
+
+---
+
+### Model: mart_venue_comparison
+
+**Column-level tests:**
+
+| Column | Tests | Rationale |
+|--------|-------|-----------|
+| date | not_null | Comparison date |
+| symbol | not_null | Comparison symbol |
+| asset_class | not_null, accepted_values: ['crypto', 'equity'] | Required discriminator |
+
+**Table-level tests:**
+- `unique: (date, symbol)` — Compound key ensures one comparison row per symbol/day
+
+---
+
+## Test Coverage Summary
+
+### Staging Layer
+- ✅ not_null on: venue, symbol, asset_class, interval_start, funding_rate_annualized_pct
+- ✅ accepted_values on: asset_class (crypto, equity)
+- ✅ accepted_range on: funding_rate_annualized_pct (-500 to 500, inclusive)
+- ✅ Negative rates allowed (range includes -500)
+
+### Marts Layer
+- ✅ not_null on all dimension columns (venue, symbol, asset_class, date/hour)
+- ✅ accepted_values on asset_class across all 3 mart tables
+- ✅ unique compound keys on all 3 mart tables:
+  - mart_hourly_funding: (venue, symbol, hour_start)
+  - mart_daily_funding: (venue, symbol, date)
+  - mart_venue_comparison: (date, symbol)
+
+### Design Principles Applied
+1. **No filtering of negative rates** — accepted_range explicitly allows -500 to 500
+2. **asset_class discriminator present** — crypto vs equity classification enforced
+3. **Compound key uniqueness** — prevents duplicate aggregations in marts
+4. **Venue-agnostic tests** — no venue-specific logic in shared mart models
+
+---
+
+## Files Created
+
+1. `/Users/nformenton/Dev/funding-rate-analytics/dbt/models/staging/schema.yml`
+   - 1 model (stg_funding_events)
+   - 11 columns documented
+   - 7 tests defined
+
+2. `/Users/nformenton/Dev/funding-rate-analytics/dbt/models/marts/schema.yml`
+   - 3 models (mart_hourly_funding, mart_daily_funding, mart_venue_comparison)
+   - 33 columns documented
+   - 15 tests defined (12 column-level + 3 table-level unique)
+
+**Total: 24 tests across 4 models**

@@ -1,0 +1,78 @@
+Task 7: Hyperliquid Ingestion Evidence
+========================================
+Date: 2026-06-16
+Container: funding-rates-pg (Postgres 16, docker)
+Connection: host=localhost port=5432 user=postgres dbname=funding_rates
+
+## Files Created
+- scripts/load_hyperliquid.py          (loader: paginated HL fundingHistory → raw.funding_hyperliquid)
+- tests/test_load_hyperliquid.py       (3 integration tests against the live DB)
+
+## Run Log — BTC-only validation
+Command: python3 scripts/load_hyperliquid.py --coins BTC
+Result : SUCCESS — fetched 26,592 raw records, downsampled to 26,592 hourly rows
+         (HL already emits ~1 record/hour; no sub-hourly duplicates to collapse).
+First  : 2023-05-12T00:00:00Z
+Last   : 2026-06-16T17:00:00Z
+Wall   : ~54s (55 API calls @ ~1s each, 20-day forward-pagination windows)
+
+## Run Log — Full ingest (BTC + ETH + SOL)
+Command: python3 scripts/load_hyperliquid.py
+Result : SUCCESS
+  BTC: 26,592 rows
+  ETH: 26,592 rows
+  SOL: 26,592 rows
+  Grand total: 79,776 rows
+
+## Row counts in raw.funding_hyperliquid (after load)
+Query:
+  SELECT coin, COUNT(*) AS rows, MIN(ts) AS first_ts, MAX(ts) AS last_ts
+  FROM raw.funding_hyperliquid GROUP BY coin ORDER BY coin;
+Result:
+   coin |  rows  |        first_ts        |        last_ts
+  ------+--------+------------------------+------------------------
+   BTC  | 26592  | 2023-05-12 00:00:00+00 | 2026-06-16 17:00:00+00
+   ETH  | 26592  | 2023-05-12 00:00:00+00 | 2026-06-16 17:00:00+00
+   SOL  | 26592  | 2023-05-12 00:00:00+00 | 2026-06-16 17:00:00+00
+  (3 rows)
+
+## Acceptance checks
+- [x] BTC > 4,000 rows                          -> 26,592 (6.6x the threshold; ~3.1 years of hourly data)
+- [x] Data is hourly granularity (no sub-hourly dupes)
+       btc_total               = 26592
+       btc_distinct_hours      = 26592
+       dup_hour_buckets_all    = 0
+- [x] BTC, ETH, SOL all present                 -> all three coins, 26,592 rows each
+- [x] First observation matches earliest HL data (2023-05-12)
+- [x] Last observation is the most recent hour before ingest (2026-06-16T17:00Z)
+- [x] Truncate+reload per symbol (idempotent re-runs verified in BTC-only test)
+
+## pytest — new test file
+Command: python3 -m pytest tests/test_load_hyperliquid.py -v
+Result :
+  tests/test_load_hyperliquid.py::TestRawHyperliquid::test_row_count_minimum PASSED
+  tests/test_load_hyperliquid.py::TestRawHyperliquid::test_hourly_granularity PASSED
+  tests/test_load_hyperliquid.py::TestRawHyperliquid::test_symbol_coverage PASSED
+  =============================== 3 passed in 0.08s ==============================
+
+## pytest — full suite
+Command: python3 -m pytest -v
+Result : 38 passed, 1 failed, 6 errors in 176.97s
+  - 38 passed includes the 3 new tests in test_load_hyperliquid.py
+  - 1 failed  : tests/test_load_equity_perps.py::test_idempotent  (pre-existing, T6 task)
+  - 6 errors  : tests/test_load_binance.py::*                    (pre-existing, T4 task;
+              network-bound slow tests that exceed the 5-minute budget; unrelated to T7)
+  These pre-existing issues live in test files for OTHER venues and are out of scope for T7.
+
+## Notes
+- HL API caps responses at 500 records per call. The loader uses 20-day forward
+  pagination windows (~480 records/window) starting from the earliest known HL
+  data point (2023-05-12 00:00 UTC, timestamp 1683849600000).
+- Downsampling rule: keep the record with the largest `time` per (coin, hour-bucket)
+  and rewrite that `time` to the start of the hour. This makes the output
+  idempotent and diff-friendly across re-runs.
+- mark_price and open_interest are persisted as NULL — the public fundingHistory
+  payload only carries fundingRate, premium, and time.  Those are the only
+  fields the loader trusts from Hyperliquid for this table.
+- Retries with exponential backoff (max 4, 1→2→4→8s) handle transient HTTP errors.
+- Inter-call sleep of 150 ms keeps the loader polite to the public endpoint.

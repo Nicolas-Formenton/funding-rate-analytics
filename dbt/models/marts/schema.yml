@@ -1,0 +1,122 @@
+version: 2
+models:
+  - name: mart_hourly_funding
+    description: Hourly aggregated funding rates by venue and symbol
+    columns:
+      - name: venue
+        description: Source venue/exchange
+        tests:
+          - not_null
+      - name: symbol
+        description: Trading pair (e.g., BTCUSDT, ETHUSDT)
+        tests:
+          - not_null
+      - name: asset_class
+        description: crypto or equity perp classification
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['crypto', 'equity']
+      - name: hour_start
+        description: Start of the hour bucket
+        tests:
+          - not_null
+      - name: avg_rate_bps
+        description: Average funding rate in basis points for the hour
+      - name: min_rate_bps
+        description: Minimum funding rate in basis points for the hour
+      - name: max_rate_bps
+        description: Maximum funding rate in basis points for the hour
+      - name: rate_stddev
+        description: Standard deviation of funding rates within the hour
+      - name: sample_count
+        description: Number of funding events aggregated
+      - name: avg_premium_bps
+        description: Average mark-index premium in basis points
+      - name: avg_mark_price
+        description: Average mark price during the hour
+      - name: avg_index_price
+        description: Average index price during the hour
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - venue
+            - symbol
+            - hour_start
+
+  - name: mart_daily_funding
+    description: Daily aggregated funding rates by venue and symbol
+    columns:
+      - name: venue
+        description: Source venue/exchange
+        tests:
+          - not_null
+      - name: symbol
+        description: Trading pair (e.g., BTCUSDT, ETHUSDT)
+        tests:
+          - not_null
+      - name: asset_class
+        description: crypto or equity perp classification
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['crypto', 'equity']
+      - name: date
+        description: Calendar date (UTC)
+        tests:
+          - not_null
+      - name: avg_rate_bps
+        description: Average funding rate in basis points for the day
+      - name: min_rate_bps
+        description: Minimum funding rate in basis points for the day
+      - name: max_rate_bps
+        description: Maximum funding rate in basis points for the day
+      - name: rate_volatility
+        description: Standard deviation of funding rates within the day
+      - name: avg_premium_bps
+        description: Average mark-index premium in basis points
+      - name: is_weekend
+        description: True if date falls on Saturday or Sunday
+      - name: daily_annualized_yield_pct
+        description: Daily average rate annualized to percentage yield
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - venue
+            - symbol
+            - date
+
+  - name: mart_venue_comparison
+    description: Cross-venue funding rate spread for arbitrage analysis
+    columns:
+      - name: date
+        description: Calendar date (UTC)
+        tests:
+          - not_null
+      - name: symbol
+        description: Trading pair (e.g., BTCUSDT, ETHUSDT)
+        tests:
+          - not_null
+      - name: asset_class
+        description: crypto or equity perp classification
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['crypto', 'equity']
+      - name: binance_rate_bps
+        description: Binance average funding rate in basis points
+      - name: hyperliquid_rate_bps
+        description: Hyperliquid average funding rate in basis points
+      - name: deribit_rate_bps
+        description: Deribit average funding rate in basis points
+      - name: max_cross_spread_bps
+        description: Maximum spread between any two venues in basis points
+      - name: arb_venue_pair
+        description: Venue pair with maximum spread (e.g., 'binance-hyperliquid')
+      - name: arb_apy_pct
+        description: Annualized arbitrage yield from cross-venue spread
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - date
+            - symbol

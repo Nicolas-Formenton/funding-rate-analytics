@@ -1,0 +1,20 @@
+# Task 5: Sample Data Creation
+Date: 2026-06-16 13:56
+
+## Files Created
+- binance_btcusdt_sample.csv: 94 lines (93 data rows), 4.5K — Jan 2023, 8h intervals
+- hyperliquid_btc_sample.csv: 169 lines (168 data rows), 7.4K — ~1 week hourly, Jun 2024
+- deribit_btc_sample.csv: 169 lines (168 data rows), 14K — ~1 week hourly, Jun 2024
+- equity_perps_sample.csv: 1 line (0 data rows), 75B — header only (HIP-3 equity perps not in HL universe)
+
+## Verification
+- All CSVs have headers matching Task 3 raw schema column names
+- binance/hyperliquid/deribit each have ≥20 rows (93, 168, 168)
+- Equity perps: 0 rows (HIP-3 SPY/QQQ/SPYUSDT not found in Hyperliquid universe)
+- Total size: 32K (well under 1MB limit)
+
+## Notes
+- Binance raw columns: calc_time, funding_interval_hours, last_funding_rate
+- Mapping: ts=calc_time, funding_rate=last_funding_rate, funding_time_ms=calc_time (mark_price/index_price N/A)
+- Hyperliquid premium field mapped to mark_price (closest available field)
+- Equity perps CSVs created with correct schema headers; no data rows available

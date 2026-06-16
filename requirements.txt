@@ -1,0 +1,6 @@
+pandas>=2.0
+requests>=2.28
+dbt-postgres>=1.7
+psycopg2-binary>=2.9
+pytest>=7.0
+duckdb>=0.10

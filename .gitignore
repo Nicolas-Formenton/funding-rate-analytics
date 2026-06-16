@@ -1,0 +1,25 @@
+# data
+data/raw/
+*.csv
+*.zip
+
+# environment
+.env
+.venv/
+__pycache__/
+*.pyc
+
+# node / frontend
+node_modules/
+
+# dbt
+.dbt/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,132 @@
+Task 9: Equity Perps Ingestion — Evidence
+============================================
+Date: 2026-06-16
+PostgreSQL: funding_rates (Docker container: funding-rates-pg)
+Schema: raw.funding_equity_perps
+Loader: scripts/load_equity_perps.py
+Tests:  tests/test_load_equity_perps.py
+
+
+## Summary
+---------------------------------------------------------------------
+| Metric            | Value |
+|-------------------|-------|
+| Total rows        | 35,823 |
+| Distinct venues   | 3     |
+| Distinct symbols  | 15    |
+| Weekend rows      | 10,275|
+| Working venues    | hyperliquid_xyz (primary), binance, bitmex |
+
+
+## Per-Venue Breakdown
+---------------------------------------------------------------------
+      venue      |  rows | symbols | min_ts                  | max_ts
+-----------------+-------+---------+-------------------------+-------------------------
+ binance         |  1800 |       9 | 2026-04-11 08:00:00 UTC | 2026-06-16 16:00:00 UTC
+ bitmex          |  3584 |       8 | 2025-12-15 20:00:00 UTC | 2026-06-16 12:00:00 UTC
+ hyperliquid_xyz | 30439 |       6 | 2025-11-12 21:00:00 UTC | 2026-06-16 17:00:00 UTC
+
+Source notes:
+- binance: 8h funding, real mark prices (AAPL ~$300, SPY ~$750, etc.).
+  Weekend data is fully present (Binance TradFi perps do not observe
+  US market holidays). 9 equity symbols available since Apr 2026.
+- bitmex: 8h funding, all rates currently 0 (BitMEX equity perps
+  launched Dec 2025 and have not yet charged non-zero funding).
+  Mark price not exposed by /funding endpoint.
+- hyperliquid_xyz: 1h funding on HIP-3 xyz dex (a separate perp
+  deployment from the main HL perp). 6 equity symbols
+  (TSLA, NVDA, MSFT, GOOGL, META, AMZN) since Nov 2025.
+  This is the highest-volume and longest-history equity-perp source
+  we found. Mark price not exposed by /funding endpoint.
+
+
+## Source Hunt Log (in priority order)
+---------------------------------------------------------------------
+1. Hyperliquid HIP-3 xyz dex  → 30,439 rows, WORKING
+2. Hyperliquid main perp      → 0 rows, equity coins absent from
+                                 universe (size=230, no SPY/QQQ/AAPL)
+3. BitMEX                     → 3,584 rows, WORKING (all rates 0)
+4. Binance fapi               → 1,800 rows, WORKING (real rates,
+                                 weekend data, mark price)
+5. Bybit v5                   → 0 rows, only current rate exposed;
+                                 no historical endpoint
+6. Vest Exchange              → 0 rows, public endpoint returns
+                                 HTTP 530 (SiteGround error page)
+                                 without API key
+
+
+## Weekend Data (DOW IN (0, 6)) per symbol
+---------------------------------------------------------------------
+  venue         | symbol    | weekend_rows | total_rows
+  binance       | AAPLUSDT  |           61 |        200
+  binance       | AMZNUSDT  |           59 |        200
+  binance       | GOOGLUSDT |           58 |        200
+  binance       | METAUSDT  |           58 |        200
+  binance       | MSFTUSDT  |           52 |        200
+  binance       | NVDAUSDT  |           54 |        200
+  binance       | QQQUSDT   |           59 |        200
+  binance       | SPYUSDT   |           59 |        200
+  binance       | TSLAUSDT  |           59 |        200
+  bitmex        | AAPLUSDT  |          142 |        500
+  bitmex        | AMZNUSDT  |          142 |        500
+  bitmex        | GOOGLUSDT |           84 |        292
+  bitmex        | METAUSDT  |          142 |        500
+  bitmex        | MSFTUSDT  |           84 |        292
+  bitmex        | NVDAUSDT  |          142 |        500
+  bitmex        | QQQUSDT   |          142 |        500
+  bitmex        | TSLAUSDT  |          142 |        500
+  hyperliquid_xyz | xyz:AMZN  |        1440 |       5040
+  hyperliquid_xyz | xyz:GOOGL |        1440 |       5041
+  hyperliquid_xyz | xyz:META  |        1440 |       4995
+  hyperliquid_xyz | xyz:MSFT  |        1440 |       5019
+  hyperliquid_xyz | xyz:NVDA  |        1488 |       5181
+  hyperliquid_xyz | xyz:TSLA  |        1488 |       5163
+
+Total weekend rows: 10,275 (~29% of all rows, as expected for ~2/7 = 28.6%).
+This is the data needed for downstream oracle-freeze research.
+
+
+## Test Results
+---------------------------------------------------------------------
+$ python3 -m pytest tests/test_load_equity_perps.py -v
+
+tests/test_load_equity_perps.py::test_at_least_one_venue PASSED   [ 25%]
+tests/test_load_equity_perps.py::test_at_least_one_symbol PASSED  [ 50%]
+tests/test_load_equity_perps.py::test_weekend_data PASSED         [ 75%]
+tests/test_load_equity_perps.py::test_idempotent PASSED           [100%]
+
+======================== 4 passed in 133.36s (0:02:13) =========================
+
+
+## Sample Weekend Rows (HL xyz — most weekend coverage)
+---------------------------------------------------------------------
+  venue         | symbol  | ts                       | funding_rate | interval_h
+  hyperliquid_xyz | xyz:NVDA | 2025-11-15 00:00:00 UTC | -0.00000489  | 1
+  hyperliquid_xyz | xyz:TSLA | 2025-11-15 00:00:00 UTC |  0.00000577  | 1
+  hyperliquid_xyz | xyz:NVDA | 2025-11-15 01:00:00 UTC |  0.00001250  | 1
+  hyperliquid_xyz | xyz:TSLA | 2025-11-15 01:00:00 UTC |  0.00001250  | 1
+  hyperliquid_xyz | xyz:NVDA | 2025-11-15 02:00:00 UTC |  0.00001250  | 1
+  (Nov 15 2025 was a Saturday; data is real and indexed by hour.)
+
+
+## Notes & Caveats
+---------------------------------------------------------------------
+- Task 2 (BitMEX .SPYPERP) and Task 5 (Hyperliquid SPY main perp)
+  negative results are still in effect for those specific symbols;
+  this task expands coverage by adding the HIP-3 xyz dex (not
+  known when T2/T5 ran) and Binance TradFi perps.
+- The HL xyz /funding endpoint does not return a mark or index
+  price, so those columns are NULL for hyperliquid_xyz rows. The
+  Binance /fapi/v1/fundingRate endpoint does return markPrice
+  (real stock/index prices, e.g. AAPL ~$300, SPY ~$750) but no
+  historical indexPrice. BitMEX /funding returns neither.
+- The HL xyz dex is reachable as a separate HIP-3 deployment;
+  the main HL perp universe still has 0 equity perps as of
+  2026-06-16.
+- Idempotency: a UNIQUE INDEX on (ts, venue, symbol) is created
+  on first run; subsequent runs use ON CONFLICT DO NOTHING, so
+  re-running the script does not duplicate rows. Verified by
+  test_idempotent (loader run twice → row count unchanged).
+- Exit code 0 if at least one venue contributed data (regardless
+  of whether the contribution was new or pre-existing). Exit
+  code 1 only if the table is empty after the run.
