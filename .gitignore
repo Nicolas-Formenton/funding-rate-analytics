@@ -24,3 +24,9 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
+
+# Supabase push scripts — contain Management API tokens, NEVER commit
+scripts/push_to_supabase_via_api.py
+scripts/*via_api*.py
+scripts/*_supabase_token*
+/tmp/supabase_push_evidence.json

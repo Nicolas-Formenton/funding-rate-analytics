@@ -12629,3 +12629,508 @@ where interval_start is null
 [0m18:32:12.680199 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10bba2d50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c0b6fc0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c0b6c50>]}
 [0m18:32:12.680353 [debug] [MainThread]: Flushing usage events
 [0m18:32:13.308811 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m20:13:34.039198 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10acc42f0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c272710>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c272990>]}
+
+
+============================== 20:13:34.042221 | 4637b041-f774-4774-a64c-9291db0916b1 ==============================
+[0m20:13:34.042221 [info ] [MainThread]: Running with dbt=1.12.0-b2
+[0m20:13:34.042461 [debug] [MainThread]: running dbt with arguments {'introspect': 'True', 'no_print': 'None', 'invocation_command': 'dbt run --profiles-dir .', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'indirect_selection': 'eager', 'empty': 'False', 'version_check': 'True', 'debug': 'False', 'log_cache_events': 'False', 'use_colors': 'True', 'use_experimental_parser': 'False', 'maximum_seed_size_mib': '1', 'cache_selected_only': 'False', 'static_parser': 'True', 'quiet': 'False', 'fail_fast': 'False', 'log_path': '/Users/nformenton/Dev/funding-rate-analytics/dbt/logs', 'log_format': 'default', 'target_path': 'None', 'send_anonymous_usage_stats': 'True', 'profiles_dir': '.', 'warn_error': 'None', 'printer_width': '80', 'write_json': 'True', 'partial_parse': 'True'}
+[0m20:13:34.171424 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '4637b041-f774-4774-a64c-9291db0916b1', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c21de00>]}
+[0m20:13:34.194998 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '4637b041-f774-4774-a64c-9291db0916b1', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108d46f10>]}
+[0m20:13:34.195992 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m20:13:34.237573 [debug] [MainThread]: checksum: 4028e76001202c6d79cbd6497f04f8a5167c54a3cd8d4daed1786e25b5aa8f08, vars: {}, profile: funding_rate_analytics, target: dev, version: 1.12.0b2
+[0m20:13:34.361183 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m20:13:34.361394 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m20:13:34.361501 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m20:13:34.378112 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '4637b041-f774-4774-a64c-9291db0916b1', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d38e850>]}
+[0m20:13:34.416924 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/nformenton/Dev/funding-rate-analytics/dbt/target/manifest.json
+[0m20:13:34.419387 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/nformenton/Dev/funding-rate-analytics/dbt/target/semantic_manifest.json
+[0m20:13:34.436928 [debug] [MainThread]: Wrote artifact OsiDocument to /Users/nformenton/Dev/funding-rate-analytics/dbt/target/osi_document.json
+[0m20:13:34.446906 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '4637b041-f774-4774-a64c-9291db0916b1', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d641f40>]}
+[0m20:13:34.447135 [info ] [MainThread]: Found 4 models, 24 data tests, 591 macros
+[0m20:13:34.447262 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '4637b041-f774-4774-a64c-9291db0916b1', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d5f9a90>]}
+[0m20:13:34.448146 [info ] [MainThread]: 
+[0m20:13:34.448273 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m20:13:34.448370 [info ] [MainThread]: 
+[0m20:13:34.448554 [debug] [MainThread]: Acquiring new postgres connection 'master'
+[0m20:13:34.450078 [debug] [ThreadPool]: Acquiring new postgres connection 'list_funding_rates'
+[0m20:13:34.450280 [debug] [ThreadPool]: Acquiring new postgres connection 'list_funding_rates'
+[0m20:13:34.525515 [debug] [ThreadPool]: Using postgres connection "list_funding_rates"
+[0m20:13:34.525842 [debug] [ThreadPool]: On list_funding_rates: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "connection_name": "list_funding_rates"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m20:13:34.525962 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m20:13:34.525716 [debug] [ThreadPool]: Using postgres connection "list_funding_rates"
+[0m20:13:34.526776 [debug] [ThreadPool]: On list_funding_rates: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "connection_name": "list_funding_rates"} */
+
+    select distinct nspname from pg_namespace
+  
+[0m20:13:34.526893 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m20:13:34.666224 [debug] [ThreadPool]: SQL status: SELECT 9 in 0.139 seconds
+[0m20:13:34.667059 [debug] [ThreadPool]: On list_funding_rates: Close
+[0m20:13:34.666462 [debug] [ThreadPool]: SQL status: SELECT 9 in 0.140 seconds
+[0m20:13:34.667540 [debug] [ThreadPool]: On list_funding_rates: Close
+[0m20:13:34.668190 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_funding_rates, now list_funding_rates_staging_staging)
+[0m20:13:34.670711 [debug] [ThreadPool]: Using postgres connection "list_funding_rates_staging_staging"
+[0m20:13:34.668378 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_funding_rates, now list_funding_rates_staging_marts)
+[0m20:13:34.671866 [debug] [ThreadPool]: Using postgres connection "list_funding_rates_staging_marts"
+[0m20:13:34.672008 [debug] [ThreadPool]: On list_funding_rates_staging_marts: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "connection_name": "list_funding_rates_staging_marts"} */
+select
+      'funding_rates' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'staging_marts'
+    union all
+    select
+      'funding_rates' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'staging_marts'
+    union all
+    select
+      'funding_rates' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'staging_marts'
+  
+[0m20:13:34.670890 [debug] [ThreadPool]: On list_funding_rates_staging_staging: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "connection_name": "list_funding_rates_staging_staging"} */
+select
+      'funding_rates' as database,
+      tablename as name,
+      schemaname as schema,
+      'table' as type
+    from pg_tables
+    where schemaname ilike 'staging_staging'
+    union all
+    select
+      'funding_rates' as database,
+      viewname as name,
+      schemaname as schema,
+      'view' as type
+    from pg_views
+    where schemaname ilike 'staging_staging'
+    union all
+    select
+      'funding_rates' as database,
+      matviewname as name,
+      schemaname as schema,
+      'materialized_view' as type
+    from pg_matviews
+    where schemaname ilike 'staging_staging'
+  
+[0m20:13:34.672235 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m20:13:34.672128 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m20:13:34.685889 [debug] [ThreadPool]: SQL status: SELECT 1 in 0.014 seconds
+[0m20:13:34.686522 [debug] [ThreadPool]: On list_funding_rates_staging_staging: ROLLBACK
+[0m20:13:34.686075 [debug] [ThreadPool]: SQL status: SELECT 3 in 0.014 seconds
+[0m20:13:34.686955 [debug] [ThreadPool]: On list_funding_rates_staging_marts: ROLLBACK
+[0m20:13:34.687085 [debug] [ThreadPool]: On list_funding_rates_staging_staging: Close
+[0m20:13:34.687466 [debug] [ThreadPool]: On list_funding_rates_staging_marts: Close
+[0m20:13:34.689523 [debug] [MainThread]: Using postgres connection "master"
+[0m20:13:34.689733 [debug] [MainThread]: On master: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "connection_name": "master"} */
+select distinct
+        dependent_namespace.nspname as dependent_schema,
+        dependent_class.relname as dependent_name,
+        referenced_namespace.nspname as referenced_schema,
+        referenced_class.relname as referenced_name
+
+    -- Query for views: views are entries in pg_class with an entry in pg_rewrite, but we avoid
+    -- a seq scan on pg_rewrite by leveraging the fact there is an "internal" row in pg_depend for
+    -- the view...
+    from pg_class as dependent_class
+    join pg_namespace as dependent_namespace on dependent_namespace.oid = dependent_class.relnamespace
+    join pg_depend as dependent_depend on dependent_depend.refobjid = dependent_class.oid
+        and dependent_depend.classid = 'pg_rewrite'::regclass
+        and dependent_depend.refclassid = 'pg_class'::regclass
+        and dependent_depend.deptype = 'i'
+
+    -- ... and via pg_depend (that has a row per column, hence the need for "distinct" above, and
+    -- making sure to exclude the internal row to avoid a view appearing to depend on itself)...
+    join pg_depend as joining_depend on joining_depend.objid = dependent_depend.objid
+        and joining_depend.classid = 'pg_rewrite'::regclass
+        and joining_depend.refclassid = 'pg_class'::regclass
+        and joining_depend.refobjid != dependent_depend.refobjid
+
+    -- ... we can find the tables they query from in pg_class, but excluding system tables. Note we
+    -- don't need need to exclude _dependent_ system tables, because they only query from other
+    -- system tables, and so are automatically excluded by excluding _referenced_ system tables
+    join pg_class as referenced_class on referenced_class.oid = joining_depend.refobjid
+    join pg_namespace as referenced_namespace on referenced_namespace.oid = referenced_class.relnamespace
+        and referenced_namespace.nspname != 'information_schema'
+        and referenced_namespace.nspname not like 'pg\_%'
+
+    order by
+        dependent_schema, dependent_name, referenced_schema, referenced_name;
+[0m20:13:34.689893 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m20:13:34.703264 [debug] [MainThread]: SQL status: SELECT 8 in 0.013 seconds
+[0m20:13:34.703787 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '4637b041-f774-4774-a64c-9291db0916b1', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d8ddd90>]}
+[0m20:13:34.703984 [debug] [MainThread]: On master: ROLLBACK
+[0m20:13:34.704466 [debug] [MainThread]: On master: COMMIT
+[0m20:13:34.704582 [debug] [MainThread]: Using postgres connection "master"
+[0m20:13:34.704682 [debug] [MainThread]: On master: COMMIT
+[0m20:13:34.705470 [debug] [MainThread]: SQL status: COMMIT in 0.001 seconds
+[0m20:13:34.705832 [debug] [MainThread]: On master: Close
+[0m20:13:34.708058 [debug] [Thread-1 (]: Began running node model.funding_rate_analytics.stg_funding_events
+[0m20:13:34.708361 [info ] [Thread-1 (]: 1 of 4 START sql view model staging_staging.stg_funding_events ................. [RUN]
+[0m20:13:34.708573 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_funding_rates_staging_staging, now model.funding_rate_analytics.stg_funding_events)
+[0m20:13:34.708718 [debug] [Thread-1 (]: Began compiling node model.funding_rate_analytics.stg_funding_events
+[0m20:13:34.711455 [debug] [Thread-1 (]: Writing injected SQL for node "model.funding_rate_analytics.stg_funding_events"
+[0m20:13:34.712024 [debug] [Thread-1 (]: Began executing node model.funding_rate_analytics.stg_funding_events
+[0m20:13:34.724252 [debug] [Thread-1 (]: Writing runtime sql for node "model.funding_rate_analytics.stg_funding_events"
+[0m20:13:34.724772 [debug] [Thread-1 (]: Using postgres connection "model.funding_rate_analytics.stg_funding_events"
+[0m20:13:34.724949 [debug] [Thread-1 (]: On model.funding_rate_analytics.stg_funding_events: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.stg_funding_events"} */
+
+  create view "funding_rates"."staging_staging"."stg_funding_events__dbt_tmp"
+    
+    
+  as (
+    -- Binance: 8h, decimal rate
+SELECT
+    'binance' AS venue,
+    symbol,
+    CASE WHEN symbol IN ('BTCUSDT','ETHUSDT','SOLUSDT') THEN 'crypto' ELSE 'equity' END AS asset_class,
+    ts AS interval_start,
+    8 AS interval_hours,
+    funding_rate AS funding_rate_raw,
+    funding_rate * 3 * 365 * 100 AS funding_rate_annualized_pct,
+    mark_price,
+    index_price,
+    CASE WHEN index_price > 0 THEN (mark_price - index_price) / index_price * 10000 ELSE NULL END AS premium_bps,
+    NOW() AS _loaded_at
+FROM raw.funding_binance
+
+UNION ALL
+
+-- Hyperliquid: hourly, decimal rate
+SELECT
+    'hyperliquid' AS venue,
+    coin AS symbol,
+    'crypto' AS asset_class,
+    ts AS interval_start,
+    1 AS interval_hours,
+    funding_rate AS funding_rate_raw,
+    funding_rate * 24 * 365 * 100 AS funding_rate_annualized_pct,
+    mark_price,
+    NULL AS index_price,
+    NULL AS premium_bps,
+    NOW() AS _loaded_at
+FROM raw.funding_hyperliquid
+
+UNION ALL
+
+-- Deribit: 8h, percentage interest
+SELECT
+    'deribit' AS venue,
+    REPLACE(instrument_name, '-PERPETUAL', '') || 'USDT' AS symbol,
+    'crypto' AS asset_class,
+    ts AS interval_start,
+    8 AS interval_hours,
+    interest_8h AS funding_rate_raw,
+    interest_8h / 100 * 3 * 365 AS funding_rate_annualized_pct,
+    mark_price,
+    index_price,
+    CASE WHEN index_price > 0 THEN (mark_price - index_price) / index_price * 10000 ELSE NULL END AS premium_bps,
+    NOW() AS _loaded_at
+FROM raw.funding_deribit
+
+UNION ALL
+
+-- Equity perps: variable intervals
+SELECT
+    venue,
+    symbol,
+    'equity' AS asset_class,
+    ts AS interval_start,
+    funding_interval_hours,
+    funding_rate AS funding_rate_raw,
+    CASE
+        WHEN funding_interval_hours > 0
+        THEN funding_rate * (24.0 / funding_interval_hours) * 365 * 100
+        ELSE NULL
+    END AS funding_rate_annualized_pct,
+    mark_price,
+    index_price,
+    CASE WHEN index_price > 0 THEN (mark_price - index_price) / index_price * 10000 ELSE NULL END AS premium_bps,
+    NOW() AS _loaded_at
+FROM raw.funding_equity_perps
+  );
+[0m20:13:34.725116 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m20:13:34.739035 [debug] [Thread-1 (]: SQL status: CREATE VIEW in 0.014 seconds
+[0m20:13:34.741539 [debug] [Thread-1 (]: Using postgres connection "model.funding_rate_analytics.stg_funding_events"
+[0m20:13:34.741690 [debug] [Thread-1 (]: On model.funding_rate_analytics.stg_funding_events: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.stg_funding_events"} */
+alter table "funding_rates"."staging_staging"."stg_funding_events" rename to "stg_funding_events__dbt_backup"
+[0m20:13:34.742380 [debug] [Thread-1 (]: SQL status: ALTER TABLE in 0.001 seconds
+[0m20:13:34.743313 [debug] [Thread-1 (]: Using postgres connection "model.funding_rate_analytics.stg_funding_events"
+[0m20:13:34.743441 [debug] [Thread-1 (]: On model.funding_rate_analytics.stg_funding_events: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.stg_funding_events"} */
+alter table "funding_rates"."staging_staging"."stg_funding_events__dbt_tmp" rename to "stg_funding_events"
+[0m20:13:34.746439 [debug] [Thread-1 (]: SQL status: ALTER TABLE in 0.001 seconds
+[0m20:13:34.753133 [debug] [Thread-1 (]: On model.funding_rate_analytics.stg_funding_events: COMMIT
+[0m20:13:34.753290 [debug] [Thread-1 (]: Using postgres connection "model.funding_rate_analytics.stg_funding_events"
+[0m20:13:34.753409 [debug] [Thread-1 (]: On model.funding_rate_analytics.stg_funding_events: COMMIT
+[0m20:13:34.755279 [debug] [Thread-1 (]: SQL status: COMMIT in 0.002 seconds
+[0m20:13:34.757511 [debug] [Thread-1 (]: Applying DROP to: "funding_rates"."staging_staging"."stg_funding_events__dbt_backup"
+[0m20:13:34.759013 [debug] [Thread-1 (]: Using postgres connection "model.funding_rate_analytics.stg_funding_events"
+[0m20:13:34.759146 [debug] [Thread-1 (]: On model.funding_rate_analytics.stg_funding_events: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.stg_funding_events"} */
+drop view if exists "funding_rates"."staging_staging"."stg_funding_events__dbt_backup" cascade
+[0m20:13:34.761714 [debug] [Thread-1 (]: SQL status: DROP VIEW in 0.002 seconds
+[0m20:13:34.762579 [debug] [Thread-1 (]: On model.funding_rate_analytics.stg_funding_events: Close
+[0m20:13:34.763669 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '4637b041-f774-4774-a64c-9291db0916b1', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10da20e90>]}
+[0m20:13:34.763999 [info ] [Thread-1 (]: 1 of 4 OK created sql view model staging_staging.stg_funding_events ............ [[32mCREATE VIEW[0m in 0.05s]
+[0m20:13:34.764244 [debug] [Thread-1 (]: Finished running node model.funding_rate_analytics.stg_funding_events
+[0m20:13:34.764870 [debug] [Thread-2 (]: Began running node model.funding_rate_analytics.mart_daily_funding
+[0m20:13:34.765055 [debug] [Thread-3 (]: Began running node model.funding_rate_analytics.mart_hourly_funding
+[0m20:13:34.765432 [info ] [Thread-3 (]: 3 of 4 START sql table model staging_marts.mart_hourly_funding ................. [RUN]
+[0m20:13:34.765629 [debug] [Thread-3 (]: Acquiring new postgres connection 'model.funding_rate_analytics.mart_hourly_funding'
+[0m20:13:34.765762 [debug] [Thread-3 (]: Began compiling node model.funding_rate_analytics.mart_hourly_funding
+[0m20:13:34.767170 [debug] [Thread-3 (]: Writing injected SQL for node "model.funding_rate_analytics.mart_hourly_funding"
+[0m20:13:34.765234 [info ] [Thread-2 (]: 2 of 4 START sql table model staging_marts.mart_daily_funding .................. [RUN]
+[0m20:13:34.767358 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly list_funding_rates_staging_marts, now model.funding_rate_analytics.mart_daily_funding)
+[0m20:13:34.767502 [debug] [Thread-2 (]: Began compiling node model.funding_rate_analytics.mart_daily_funding
+[0m20:13:34.768401 [debug] [Thread-2 (]: Writing injected SQL for node "model.funding_rate_analytics.mart_daily_funding"
+[0m20:13:34.768606 [debug] [Thread-3 (]: Began executing node model.funding_rate_analytics.mart_hourly_funding
+[0m20:13:34.776219 [debug] [Thread-3 (]: Writing runtime sql for node "model.funding_rate_analytics.mart_hourly_funding"
+[0m20:13:34.776417 [debug] [Thread-2 (]: Began executing node model.funding_rate_analytics.mart_daily_funding
+[0m20:13:34.777678 [debug] [Thread-2 (]: Writing runtime sql for node "model.funding_rate_analytics.mart_daily_funding"
+[0m20:13:34.777917 [debug] [Thread-3 (]: Using postgres connection "model.funding_rate_analytics.mart_hourly_funding"
+[0m20:13:34.778077 [debug] [Thread-3 (]: On model.funding_rate_analytics.mart_hourly_funding: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_hourly_funding"} */
+
+  
+    
+
+  create  table "funding_rates"."staging_marts"."mart_hourly_funding__dbt_tmp"
+  
+  
+    as
+  
+  (
+    SELECT
+    venue,
+    symbol,
+    asset_class,
+    DATE_TRUNC('hour', interval_start) AS hour_start,
+    AVG(funding_rate_annualized_pct) * 100 AS avg_rate_bps,
+    MIN(funding_rate_annualized_pct) * 100 AS min_rate_bps,
+    MAX(funding_rate_annualized_pct) * 100 AS max_rate_bps,
+    STDDEV(funding_rate_annualized_pct) * 100 AS rate_stddev,
+    COUNT(*) AS sample_count,
+    AVG(premium_bps) AS avg_premium_bps,
+    AVG(mark_price) AS avg_mark_price,
+    AVG(index_price) AS avg_index_price
+FROM "funding_rates"."staging_staging"."stg_funding_events"
+WHERE funding_rate_annualized_pct IS NOT NULL
+GROUP BY 1, 2, 3, 4
+  );
+  
+[0m20:13:34.778223 [debug] [Thread-3 (]: Opening a new connection, currently in state init
+[0m20:13:34.778433 [debug] [Thread-2 (]: Using postgres connection "model.funding_rate_analytics.mart_daily_funding"
+[0m20:13:34.778726 [debug] [Thread-2 (]: On model.funding_rate_analytics.mart_daily_funding: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_daily_funding"} */
+
+  
+    
+
+  create  table "funding_rates"."staging_marts"."mart_daily_funding__dbt_tmp"
+  
+  
+    as
+  
+  (
+    WITH daily_agg AS (
+    SELECT
+        venue,
+        symbol,
+        asset_class,
+        DATE_TRUNC('day', interval_start)::DATE AS date,
+        AVG(funding_rate_annualized_pct) * 100 AS avg_rate_bps,
+        MIN(funding_rate_annualized_pct) * 100 AS min_rate_bps,
+        MAX(funding_rate_annualized_pct) * 100 AS max_rate_bps,
+        STDDEV(funding_rate_annualized_pct) * 100 AS rate_volatility,
+        AVG(premium_bps) AS avg_premium_bps,
+        AVG(funding_rate_annualized_pct) AS daily_annualized_yield_pct
+    FROM "funding_rates"."staging_staging"."stg_funding_events"
+    WHERE funding_rate_annualized_pct IS NOT NULL
+    GROUP BY 1, 2, 3, 4
+)
+SELECT
+    venue,
+    symbol,
+    asset_class,
+    date,
+    avg_rate_bps,
+    min_rate_bps,
+    max_rate_bps,
+    rate_volatility,
+    avg_premium_bps,
+    EXTRACT(DOW FROM date) IN (0, 6) AS is_weekend,
+    daily_annualized_yield_pct
+FROM daily_agg
+  );
+  
+[0m20:13:34.778874 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m20:13:35.176939 [debug] [Thread-2 (]: SQL status: SELECT 18437 in 0.398 seconds
+[0m20:13:35.179714 [debug] [Thread-2 (]: Using postgres connection "model.funding_rate_analytics.mart_daily_funding"
+[0m20:13:35.179874 [debug] [Thread-2 (]: On model.funding_rate_analytics.mart_daily_funding: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_daily_funding"} */
+alter table "funding_rates"."staging_marts"."mart_daily_funding" rename to "mart_daily_funding__dbt_backup"
+[0m20:13:35.180447 [debug] [Thread-2 (]: SQL status: ALTER TABLE in 0.000 seconds
+[0m20:13:35.181395 [debug] [Thread-2 (]: Using postgres connection "model.funding_rate_analytics.mart_daily_funding"
+[0m20:13:35.181527 [debug] [Thread-2 (]: On model.funding_rate_analytics.mart_daily_funding: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_daily_funding"} */
+alter table "funding_rates"."staging_marts"."mart_daily_funding__dbt_tmp" rename to "mart_daily_funding"
+[0m20:13:35.182055 [debug] [Thread-2 (]: SQL status: ALTER TABLE in 0.000 seconds
+[0m20:13:35.182582 [debug] [Thread-2 (]: On model.funding_rate_analytics.mart_daily_funding: COMMIT
+[0m20:13:35.182712 [debug] [Thread-2 (]: Using postgres connection "model.funding_rate_analytics.mart_daily_funding"
+[0m20:13:35.182828 [debug] [Thread-2 (]: On model.funding_rate_analytics.mart_daily_funding: COMMIT
+[0m20:13:35.187836 [debug] [Thread-2 (]: SQL status: COMMIT in 0.005 seconds
+[0m20:13:35.189256 [debug] [Thread-2 (]: Applying DROP to: "funding_rates"."staging_marts"."mart_daily_funding__dbt_backup"
+[0m20:13:35.190451 [debug] [Thread-2 (]: Using postgres connection "model.funding_rate_analytics.mart_daily_funding"
+[0m20:13:35.190602 [debug] [Thread-2 (]: On model.funding_rate_analytics.mart_daily_funding: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_daily_funding"} */
+drop table if exists "funding_rates"."staging_marts"."mart_daily_funding__dbt_backup" cascade
+[0m20:13:35.193057 [debug] [Thread-2 (]: SQL status: DROP TABLE in 0.002 seconds
+[0m20:13:35.193645 [debug] [Thread-2 (]: On model.funding_rate_analytics.mart_daily_funding: Close
+[0m20:13:35.193900 [debug] [Thread-2 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '4637b041-f774-4774-a64c-9291db0916b1', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d73aa40>]}
+[0m20:13:35.194159 [info ] [Thread-2 (]: 2 of 4 OK created sql table model staging_marts.mart_daily_funding ............. [[32mSELECT 18437[0m in 0.43s]
+[0m20:13:35.194367 [debug] [Thread-2 (]: Finished running node model.funding_rate_analytics.mart_daily_funding
+[0m20:13:35.194611 [debug] [Thread-4 (]: Began running node model.funding_rate_analytics.mart_venue_comparison
+[0m20:13:35.194822 [info ] [Thread-4 (]: 4 of 4 START sql table model staging_marts.mart_venue_comparison ............... [RUN]
+[0m20:13:35.195028 [debug] [Thread-4 (]: Acquiring new postgres connection 'model.funding_rate_analytics.mart_venue_comparison'
+[0m20:13:35.195163 [debug] [Thread-4 (]: Began compiling node model.funding_rate_analytics.mart_venue_comparison
+[0m20:13:35.196328 [debug] [Thread-4 (]: Writing injected SQL for node "model.funding_rate_analytics.mart_venue_comparison"
+[0m20:13:35.197051 [debug] [Thread-4 (]: Began executing node model.funding_rate_analytics.mart_venue_comparison
+[0m20:13:35.198567 [debug] [Thread-4 (]: Writing runtime sql for node "model.funding_rate_analytics.mart_venue_comparison"
+[0m20:13:35.199208 [debug] [Thread-4 (]: Using postgres connection "model.funding_rate_analytics.mart_venue_comparison"
+[0m20:13:35.199377 [debug] [Thread-4 (]: On model.funding_rate_analytics.mart_venue_comparison: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_venue_comparison"} */
+
+  
+    
+
+  create  table "funding_rates"."staging_marts"."mart_venue_comparison__dbt_tmp"
+  
+  
+    as
+  
+  (
+    WITH daily AS (
+    SELECT * FROM "funding_rates"."staging_marts"."mart_daily_funding"
+),
+binance AS (
+    SELECT date, symbol, asset_class, avg_rate_bps
+    FROM daily WHERE venue = 'binance'
+),
+hyperliquid AS (
+    SELECT date, symbol, asset_class, avg_rate_bps
+    FROM daily WHERE venue = 'hyperliquid'
+),
+deribit AS (
+    SELECT date, symbol, asset_class, avg_rate_bps
+    FROM daily WHERE venue = 'deribit'
+)
+SELECT
+    COALESCE(b.date, h.date, d.date) AS date,
+    COALESCE(b.symbol, h.symbol, d.symbol) AS symbol,
+    COALESCE(b.asset_class, h.asset_class, d.asset_class) AS asset_class,
+    b.avg_rate_bps AS binance_rate_bps,
+    h.avg_rate_bps AS hyperliquid_rate_bps,
+    d.avg_rate_bps AS deribit_rate_bps,
+    GREATEST(
+        COALESCE(ABS(b.avg_rate_bps - h.avg_rate_bps), 0),
+        COALESCE(ABS(b.avg_rate_bps - d.avg_rate_bps), 0),
+        COALESCE(ABS(h.avg_rate_bps - d.avg_rate_bps), 0)
+    ) AS max_cross_spread_bps,
+    CASE
+        WHEN ABS(COALESCE(b.avg_rate_bps, 0) - COALESCE(h.avg_rate_bps, 0))
+            >= GREATEST(
+                COALESCE(ABS(b.avg_rate_bps - d.avg_rate_bps), 0),
+                COALESCE(ABS(h.avg_rate_bps - d.avg_rate_bps), 0)
+            )
+            THEN 'binance-hyperliquid'
+        WHEN ABS(COALESCE(b.avg_rate_bps, 0) - COALESCE(d.avg_rate_bps, 0))
+            >= COALESCE(ABS(h.avg_rate_bps - d.avg_rate_bps), 0)
+            THEN 'binance-deribit'
+        ELSE 'hyperliquid-deribit'
+    END AS arb_venue_pair,
+    0 AS arb_apy_pct
+FROM binance b
+FULL OUTER JOIN hyperliquid h
+    ON b.date = h.date AND b.symbol = h.symbol
+FULL OUTER JOIN deribit d
+    ON COALESCE(b.date, h.date) = d.date
+    AND COALESCE(b.symbol, h.symbol) = d.symbol
+  );
+  
+[0m20:13:35.199540 [debug] [Thread-4 (]: Opening a new connection, currently in state init
+[0m20:13:35.219358 [debug] [Thread-4 (]: SQL status: SELECT 11273 in 0.020 seconds
+[0m20:13:35.220817 [debug] [Thread-4 (]: Using postgres connection "model.funding_rate_analytics.mart_venue_comparison"
+[0m20:13:35.220967 [debug] [Thread-4 (]: On model.funding_rate_analytics.mart_venue_comparison: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_venue_comparison"} */
+alter table "funding_rates"."staging_marts"."mart_venue_comparison" rename to "mart_venue_comparison__dbt_backup"
+[0m20:13:35.221544 [debug] [Thread-4 (]: SQL status: ALTER TABLE in 0.000 seconds
+[0m20:13:35.222678 [debug] [Thread-4 (]: Using postgres connection "model.funding_rate_analytics.mart_venue_comparison"
+[0m20:13:35.222814 [debug] [Thread-4 (]: On model.funding_rate_analytics.mart_venue_comparison: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_venue_comparison"} */
+alter table "funding_rates"."staging_marts"."mart_venue_comparison__dbt_tmp" rename to "mart_venue_comparison"
+[0m20:13:35.223314 [debug] [Thread-4 (]: SQL status: ALTER TABLE in 0.000 seconds
+[0m20:13:35.223832 [debug] [Thread-4 (]: On model.funding_rate_analytics.mart_venue_comparison: COMMIT
+[0m20:13:35.223959 [debug] [Thread-4 (]: Using postgres connection "model.funding_rate_analytics.mart_venue_comparison"
+[0m20:13:35.224076 [debug] [Thread-4 (]: On model.funding_rate_analytics.mart_venue_comparison: COMMIT
+[0m20:13:35.229282 [debug] [Thread-4 (]: SQL status: COMMIT in 0.005 seconds
+[0m20:13:35.230177 [debug] [Thread-4 (]: Applying DROP to: "funding_rates"."staging_marts"."mart_venue_comparison__dbt_backup"
+[0m20:13:35.230476 [debug] [Thread-4 (]: Using postgres connection "model.funding_rate_analytics.mart_venue_comparison"
+[0m20:13:35.230610 [debug] [Thread-4 (]: On model.funding_rate_analytics.mart_venue_comparison: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_venue_comparison"} */
+drop table if exists "funding_rates"."staging_marts"."mart_venue_comparison__dbt_backup" cascade
+[0m20:13:35.232439 [debug] [Thread-4 (]: SQL status: DROP TABLE in 0.002 seconds
+[0m20:13:35.232947 [debug] [Thread-4 (]: On model.funding_rate_analytics.mart_venue_comparison: Close
+[0m20:13:35.233208 [debug] [Thread-4 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '4637b041-f774-4774-a64c-9291db0916b1', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10db02210>]}
+[0m20:13:35.233477 [info ] [Thread-4 (]: 4 of 4 OK created sql table model staging_marts.mart_venue_comparison .......... [[32mSELECT 11273[0m in 0.04s]
+[0m20:13:35.233683 [debug] [Thread-4 (]: Finished running node model.funding_rate_analytics.mart_venue_comparison
+[0m20:13:35.443866 [debug] [Thread-3 (]: SQL status: SELECT 260962 in 0.666 seconds
+[0m20:13:35.445790 [debug] [Thread-3 (]: Using postgres connection "model.funding_rate_analytics.mart_hourly_funding"
+[0m20:13:35.445955 [debug] [Thread-3 (]: On model.funding_rate_analytics.mart_hourly_funding: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_hourly_funding"} */
+alter table "funding_rates"."staging_marts"."mart_hourly_funding" rename to "mart_hourly_funding__dbt_backup"
+[0m20:13:35.446577 [debug] [Thread-3 (]: SQL status: ALTER TABLE in 0.000 seconds
+[0m20:13:35.447903 [debug] [Thread-3 (]: Using postgres connection "model.funding_rate_analytics.mart_hourly_funding"
+[0m20:13:35.448048 [debug] [Thread-3 (]: On model.funding_rate_analytics.mart_hourly_funding: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_hourly_funding"} */
+alter table "funding_rates"."staging_marts"."mart_hourly_funding__dbt_tmp" rename to "mart_hourly_funding"
+[0m20:13:35.448550 [debug] [Thread-3 (]: SQL status: ALTER TABLE in 0.000 seconds
+[0m20:13:35.449142 [debug] [Thread-3 (]: On model.funding_rate_analytics.mart_hourly_funding: COMMIT
+[0m20:13:35.449357 [debug] [Thread-3 (]: Using postgres connection "model.funding_rate_analytics.mart_hourly_funding"
+[0m20:13:35.449553 [debug] [Thread-3 (]: On model.funding_rate_analytics.mart_hourly_funding: COMMIT
+[0m20:13:35.466773 [debug] [Thread-3 (]: SQL status: COMMIT in 0.017 seconds
+[0m20:13:35.468164 [debug] [Thread-3 (]: Applying DROP to: "funding_rates"."staging_marts"."mart_hourly_funding__dbt_backup"
+[0m20:13:35.468533 [debug] [Thread-3 (]: Using postgres connection "model.funding_rate_analytics.mart_hourly_funding"
+[0m20:13:35.468777 [debug] [Thread-3 (]: On model.funding_rate_analytics.mart_hourly_funding: /* {"app": "dbt", "dbt_version": "1.12.0b2", "profile_name": "funding_rate_analytics", "target_name": "dev", "node_id": "model.funding_rate_analytics.mart_hourly_funding"} */
+drop table if exists "funding_rates"."staging_marts"."mart_hourly_funding__dbt_backup" cascade
+[0m20:13:35.471368 [debug] [Thread-3 (]: SQL status: DROP TABLE in 0.002 seconds
+[0m20:13:35.471800 [debug] [Thread-3 (]: On model.funding_rate_analytics.mart_hourly_funding: Close
+[0m20:13:35.472082 [debug] [Thread-3 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '4637b041-f774-4774-a64c-9291db0916b1', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d9afe50>]}
+[0m20:13:35.472326 [info ] [Thread-3 (]: 3 of 4 OK created sql table model staging_marts.mart_hourly_funding ............ [[32mSELECT 260962[0m in 0.71s]
+[0m20:13:35.472531 [debug] [Thread-3 (]: Finished running node model.funding_rate_analytics.mart_hourly_funding
+[0m20:13:35.473078 [debug] [MainThread]: On master: COMMIT
+[0m20:13:35.473234 [debug] [MainThread]: Using postgres connection "master"
+[0m20:13:35.473341 [debug] [MainThread]: On master: COMMIT
+[0m20:13:35.473434 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m20:13:35.478509 [debug] [MainThread]: SQL status: COMMIT in 0.005 seconds
+[0m20:13:35.478651 [debug] [MainThread]: On master: Close
+[0m20:13:35.478814 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m20:13:35.478924 [debug] [MainThread]: Connection 'model.funding_rate_analytics.stg_funding_events' was properly closed.
+[0m20:13:35.479021 [debug] [MainThread]: Connection 'model.funding_rate_analytics.mart_daily_funding' was properly closed.
+[0m20:13:35.479114 [debug] [MainThread]: Connection 'model.funding_rate_analytics.mart_hourly_funding' was properly closed.
+[0m20:13:35.479205 [debug] [MainThread]: Connection 'model.funding_rate_analytics.mart_venue_comparison' was properly closed.
+[0m20:13:35.479347 [info ] [MainThread]: 
+[0m20:13:35.479471 [info ] [MainThread]: Finished running 3 table models, 1 view model in 0 hours 0 minutes and 1.03 seconds (1.03s).
+[0m20:13:35.479851 [debug] [MainThread]: Command end result
+[0m20:13:35.501504 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/nformenton/Dev/funding-rate-analytics/dbt/target/manifest.json
+[0m20:13:35.503987 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/nformenton/Dev/funding-rate-analytics/dbt/target/semantic_manifest.json
+[0m20:13:35.505514 [debug] [MainThread]: Wrote artifact OsiDocument to /Users/nformenton/Dev/funding-rate-analytics/dbt/target/osi_document.json
+[0m20:13:35.509069 [debug] [MainThread]: Wrote artifact RunExecutionResult to /Users/nformenton/Dev/funding-rate-analytics/dbt/target/run_results.json
+[0m20:13:35.509198 [info ] [MainThread]: 
+[0m20:13:35.509340 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m20:13:35.509450 [info ] [MainThread]: 
+[0m20:13:35.509572 [info ] [MainThread]: Done. PASS=4 WARN=0 ERROR=0 SKIP=0 NO-OP=0 REUSED=0 TOTAL=4
+[0m20:13:35.512255 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": true, "command_wall_clock_time": 1.5252106, "process_in_blocks": "0", "process_kernel_time": 0.196505, "process_mem_max_rss": "167690240", "process_out_blocks": "0", "process_user_time": 0.96281}
+[0m20:13:35.512460 [debug] [MainThread]: Command `dbt run` succeeded at 20:13:35.512427 after 1.53 seconds
+[0m20:13:35.512613 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c2978c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10c054e50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d0bbad0>]}
+[0m20:13:35.512758 [debug] [MainThread]: Flushing usage events
+[0m20:13:36.279190 [debug] [MainThread]: An error was encountered while trying to flush usage events
