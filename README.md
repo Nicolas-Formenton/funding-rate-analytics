@@ -16,7 +16,7 @@ This portfolio showcases four interactive BI dashboards backed by a dbt data pip
 | 4 | **Annualized Yield Analysis** | 12 | Cumulative yield, risk-return, seasonality, negative funding |
 
 > **Live dashboards**: [Deepnote project](https://deepnote.com/workspace/Exploratory-Analysis-fb5d0c52-59fc-4f39-950c-94709466c5d9/project/Funding-Rate-Analytics-ba935e29-1cf6-4f1d-ac3a-9218b41f71dd) — 4 interactive dashboards with Plotly charts
-> **Research report**: Hex report URL (TBD)
+> **Research report**: [Hex project](https://app.hex.tech/019eb393-3d2c-75b8-9208-12e174506253/hex/Funding-Rate-Research-033Zf35Pwq9hRlSAvaUqPC/) — 3 statistical hypotheses tested (weekend oracle freeze, cross-venue arbitrage, mean reversion)
 
 ---
 
