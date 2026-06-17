@@ -10,10 +10,10 @@
 -- and especially on weekends when oracles freeze.
 
 SELECT
-    EXTRACT(HOUR FROM timestamp) AS hour_of_day,
+    EXTRACT(HOUR FROM hour_start) AS hour_of_day,
     asset_class,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
     COUNT(*) AS observation_count
 FROM marts.mart_hourly_funding
-GROUP BY EXTRACT(HOUR FROM timestamp), asset_class
+GROUP BY EXTRACT(HOUR FROM hour_start), asset_class
 ORDER BY hour_of_day, asset_class;

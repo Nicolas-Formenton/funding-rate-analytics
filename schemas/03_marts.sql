@@ -33,16 +33,16 @@ CREATE TABLE marts.mart_daily_funding (
     daily_annualized_yield_pct NUMERIC(12,4)
 );
 
--- mart_venue_comparison: cross-venue spread
+-- mart_venue_comparison: cross-venue spread (long format, one row per venue pair)
 CREATE TABLE marts.mart_venue_comparison (
     id SERIAL PRIMARY KEY,
     date DATE NOT NULL,
     symbol VARCHAR(20) NOT NULL,
     asset_class VARCHAR(10) NOT NULL,
-    binance_rate_bps NUMERIC(12,4),
-    hyperliquid_rate_bps NUMERIC(12,4),
-    deribit_rate_bps NUMERIC(12,4),
-    max_cross_spread_bps NUMERIC(12,4),
-    arb_venue_pair VARCHAR(40),
+    venue_long VARCHAR(20) NOT NULL,
+    venue_short VARCHAR(20) NOT NULL,
+    long_rate_bps NUMERIC(12,4),
+    short_rate_bps NUMERIC(12,4),
+    spread_bps NUMERIC(12,4),
     arb_apy_pct NUMERIC(12,4)
 );

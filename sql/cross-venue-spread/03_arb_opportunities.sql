@@ -14,7 +14,7 @@ SELECT
     venue_long,
     venue_short,
     spread_bps,
-    ROUND(spread_bps * 3.65, 2) AS arb_apy_pct
+    ROUND(spread_bps / 100.0, 2) AS arb_apy_pct
 FROM marts.mart_venue_comparison
 WHERE spread_bps * 3.65 > 10.0
 ORDER BY arb_apy_pct DESC, date DESC;

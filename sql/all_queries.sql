@@ -407,7 +407,7 @@ SELECT
     venue_long,
     venue_short,
     spread_bps,
-    ROUND(spread_bps * 3.65, 2) AS arb_apy_pct
+    ROUND(spread_bps / 100.0, 2) AS arb_apy_pct
 FROM marts.mart_venue_comparison
 WHERE spread_bps * 3.65 > 10.0
 ORDER BY arb_apy_pct DESC, date DESC;
@@ -630,7 +630,7 @@ SELECT
     venue_long,
     venue_short,
     spread_bps,
-    ROUND(spread_bps * 3.65, 2) AS arb_apy_pct
+    ROUND(spread_bps / 100.0, 2) AS arb_apy_pct
 FROM marts.mart_venue_comparison
 ORDER BY arb_apy_pct DESC
 LIMIT 20;
@@ -683,7 +683,7 @@ SELECT
     venue_long,
     venue_short,
     spread_bps,
-    ROUND(spread_bps * 3.65, 2) AS arb_apy_pct
+    ROUND(spread_bps / 100.0, 2) AS arb_apy_pct
 FROM marts.mart_venue_comparison
 WHERE asset_class = 'crypto'
 ORDER BY date DESC, spread_bps DESC;
@@ -812,12 +812,12 @@ ORDER BY venue, is_weekend;
 -- and especially on weekends when oracles freeze.
 
 SELECT
-    EXTRACT(HOUR FROM timestamp) AS hour_of_day,
+    EXTRACT(HOUR FROM hour_start) AS hour_of_day,
     asset_class,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
     COUNT(*) AS observation_count
 FROM marts.mart_hourly_funding
-GROUP BY EXTRACT(HOUR FROM timestamp), asset_class
+GROUP BY EXTRACT(HOUR FROM hour_start), asset_class
 ORDER BY hour_of_day, asset_class;
 
 
@@ -1005,22 +1005,22 @@ ORDER BY venue, total_days DESC;
 -- show no such gap.
 
 SELECT
-    DATE(timestamp) AS date,
-    EXTRACT(HOUR FROM timestamp)::int AS hour_of_day,
+    DATE(hour_start) AS date,
+    EXTRACT(HOUR FROM hour_start)::int AS hour_of_day,
     asset_class,
     venue,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
     ROUND(
         AVG(avg_rate_bps) - LAG(AVG(avg_rate_bps)) OVER (
             PARTITION BY asset_class, venue
-            ORDER BY DATE(timestamp), EXTRACT(HOUR FROM timestamp)
+            ORDER BY DATE(hour_start), EXTRACT(HOUR FROM hour_start)
         ),
         4
     ) AS rate_change_from_prev_hour
 FROM marts.mart_hourly_funding
-WHERE EXTRACT(DOW FROM timestamp) IN (0, 5, 6)
-GROUP BY DATE(timestamp), EXTRACT(HOUR FROM timestamp), asset_class, venue
-ORDER BY DATE(timestamp), hour_of_day, asset_class, venue;
+WHERE EXTRACT(DOW FROM hour_start) IN (0, 5, 6)
+GROUP BY DATE(hour_start), EXTRACT(HOUR FROM hour_start), asset_class, venue
+ORDER BY DATE(hour_start), hour_of_day, asset_class, venue;
 
 
 -- -----------------------------------------------------------------------------
@@ -1153,7 +1153,7 @@ ORDER BY date DESC, venue;
 SELECT
     venue,
     symbol,
-    ROUND(SUM(avg_rate_bps) / 100.0, 4) AS cumulative_yield_pct,
+    ROUND(SUM(avg_rate_bps / 36500.0), 4) AS cumulative_yield_pct,
     COUNT(DISTINCT date) AS days_held,
     ROUND(AVG(avg_rate_bps) / 100.0, 4) AS avg_daily_yield_pct
 FROM marts.mart_daily_funding

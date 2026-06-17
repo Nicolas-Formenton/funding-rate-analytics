@@ -12,7 +12,7 @@
 SELECT
     venue,
     symbol,
-    ROUND(SUM(avg_rate_bps) / 100.0, 4) AS cumulative_yield_pct,
+    ROUND(SUM(avg_rate_bps / 36500.0), 4) AS cumulative_yield_pct,
     COUNT(DISTINCT date) AS days_held,
     ROUND(AVG(avg_rate_bps) / 100.0, 4) AS avg_daily_yield_pct
 FROM marts.mart_daily_funding

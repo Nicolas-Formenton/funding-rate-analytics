@@ -10,19 +10,19 @@
 -- show no such gap.
 
 SELECT
-    DATE(timestamp) AS date,
-    EXTRACT(HOUR FROM timestamp)::int AS hour_of_day,
+    DATE(hour_start) AS date,
+    EXTRACT(HOUR FROM hour_start)::int AS hour_of_day,
     asset_class,
     venue,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
     ROUND(
         AVG(avg_rate_bps) - LAG(AVG(avg_rate_bps)) OVER (
             PARTITION BY asset_class, venue
-            ORDER BY DATE(timestamp), EXTRACT(HOUR FROM timestamp)
+            ORDER BY DATE(hour_start), EXTRACT(HOUR FROM hour_start)
         ),
         4
     ) AS rate_change_from_prev_hour
 FROM marts.mart_hourly_funding
-WHERE EXTRACT(DOW FROM timestamp) IN (0, 5, 6)
-GROUP BY DATE(timestamp), EXTRACT(HOUR FROM timestamp), asset_class, venue
-ORDER BY DATE(timestamp), hour_of_day, asset_class, venue;
+WHERE EXTRACT(DOW FROM hour_start) IN (0, 5, 6)
+GROUP BY DATE(hour_start), EXTRACT(HOUR FROM hour_start), asset_class, venue
+ORDER BY DATE(hour_start), hour_of_day, asset_class, venue;

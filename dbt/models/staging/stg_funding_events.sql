@@ -35,7 +35,7 @@ UNION ALL
 -- Deribit: 8h, decimal fraction (e.g., 5.9e-05 = 0.0059% per 8h)
 SELECT
     'deribit' AS venue,
-    REPLACE(instrument_name, '-PERPETUAL', '') || 'USDT' AS symbol,
+    REPLACE(instrument_name, '-PERPETUAL', '') AS symbol,
     'crypto' AS asset_class,
     ts AS interval_start,
     8 AS interval_hours,

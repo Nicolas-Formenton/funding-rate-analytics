@@ -87,14 +87,14 @@ models:
             - date
 
   - name: mart_venue_comparison
-    description: Cross-venue funding rate spread for arbitrage analysis
+    description: Cross-venue funding rate spread for arbitrage analysis (long format, one row per venue pair)
     columns:
       - name: date
         description: Calendar date (UTC)
         tests:
           - not_null
       - name: symbol
-        description: Trading pair (e.g., BTCUSDT, ETHUSDT)
+        description: Normalized base symbol (e.g., BTC, ETH)
         tests:
           - not_null
       - name: asset_class
@@ -103,20 +103,26 @@ models:
           - not_null
           - accepted_values:
               values: ['crypto', 'equity']
-      - name: binance_rate_bps
-        description: Binance average funding rate in basis points
-      - name: hyperliquid_rate_bps
-        description: Hyperliquid average funding rate in basis points
-      - name: deribit_rate_bps
-        description: Deribit average funding rate in basis points
-      - name: max_cross_spread_bps
-        description: Maximum spread between any two venues in basis points
-      - name: arb_venue_pair
-        description: Venue pair with maximum spread (e.g., 'binance-hyperliquid')
+      - name: venue_long
+        description: Venue with lower funding rate (go long here for arb)
+        tests:
+          - not_null
+      - name: venue_short
+        description: Venue with higher funding rate (go short here for arb)
+        tests:
+          - not_null
+      - name: long_rate_bps
+        description: Funding rate at venue_long in basis points
+      - name: short_rate_bps
+        description: Funding rate at venue_short in basis points
+      - name: spread_bps
+        description: Absolute spread between venues in basis points
       - name: arb_apy_pct
-        description: Annualized arbitrage yield from cross-venue spread
+        description: Arbitrage yield from cross-venue spread (spread_bps / 100)
     tests:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - date
             - symbol
+            - venue_long
+            - venue_short
