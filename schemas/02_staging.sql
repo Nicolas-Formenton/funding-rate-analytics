@@ -35,7 +35,7 @@ FROM raw.funding_hyperliquid
 
 UNION ALL
 
--- Deribit: 8h, percentage interest
+-- Deribit: 8h, decimal fraction (e.g., 5.9e-05 = 0.0059% per 8h)
 SELECT
     'deribit' AS venue,
     REPLACE(instrument_name, '-PERPETUAL', '') || 'USDT' AS symbol,
@@ -43,7 +43,7 @@ SELECT
     ts AS interval_start,
     8 AS interval_hours,
     interest_8h AS funding_rate_raw,
-    interest_8h / 100 * 3 * 365 AS funding_rate_annualized_pct,
+    interest_8h * 3 * 365 * 100 AS funding_rate_annualized_pct,
     mark_price,
     index_price,
     CASE WHEN index_price > 0 THEN (mark_price - index_price) / index_price * 10000 ELSE NULL END AS premium_bps,

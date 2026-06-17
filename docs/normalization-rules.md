@@ -50,24 +50,24 @@ funding_rate_annualized_pct = funding_rate × 24 × 365 × 100
 
 ---
 
-### Deribit (8-hour intervals, percentage format)
+### Deribit (8-hour intervals, decimal fraction format)
 
-**Source format:** Percentage rate (e.g., 0.01 = 0.01%)  
+**Source format:** Decimal fraction (e.g., 0.000059 = 0.0059% per 8h period)  
 **Interval:** 8 hours (3 times per day)
 
 **Formula:**
 ```
-funding_rate_annualized_pct = (interest_8h / 100) × 3 × 365
+funding_rate_annualized_pct = interest_8h × 3 × 365 × 100
 ```
 
 **Breakdown:**
-- `/ 100` — Convert percentage to decimal
 - `× 3` — Convert 8-hour rate to daily rate (24h / 8h = 3 intervals per day)
 - `× 365` — Convert daily rate to annual rate
+- `× 100` — Convert decimal fraction to percentage (consistent with all other venues)
 
 **Example:**
-- Input: `0.01` (0.01% per 8h)
-- Output: `(0.01 / 100) × 3 × 365 = 0.1095%` APR
+- Input: `0.000059` (0.0059% per 8h)
+- Output: `0.000059 × 3 × 365 × 100 = 6.49%` APR (≈ 649 bps)
 
 ---
 
