@@ -15,7 +15,7 @@ This portfolio showcases four interactive BI dashboards backed by a dbt data pip
 | 3 | **Equity vs Crypto Perps** | 13 | Weekend oracle freeze, hourly patterns, regulatory comparison |
 | 4 | **Annualized Yield Analysis** | 12 | Cumulative yield, risk-return, seasonality, negative funding |
 
-> **Live dashboards**: Deepnote project URL (TBD)
+> **Live dashboards**: [Deepnote project](https://deepnote.com/workspace/Exploratory-Analysis-fb5d0c52-59fc-4f39-950c-94709466c5d9/project/Funding-Rate-Analytics-ba935e29-1cf6-4f1d-ac3a-9218b41f71dd) — 4 interactive dashboards with Plotly charts
 > **Research report**: Hex report URL (TBD)
 
 ---
