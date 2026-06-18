@@ -12,7 +12,7 @@ SELECT
     TO_CHAR(DATE_TRUNC('month', date), 'YYYY-MM') AS year_month,
     asset_class,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
     ROUND(STDDEV(avg_rate_bps), 4) AS std_dev_bps,
     COUNT(*) AS observation_count
 FROM marts.mart_daily_funding

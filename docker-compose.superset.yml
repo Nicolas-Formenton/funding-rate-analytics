@@ -1,0 +1,93 @@
+services:
+  superset-db:
+    image: postgres:16-alpine
+    container_name: superset-db
+    restart: unless-stopped
+    networks:
+      - superset-net
+    environment:
+      POSTGRES_DB: superset
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: superset
+    volumes:
+      - superset_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U superset -d superset"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  superset-init:
+    image: apache/superset:4.0.0
+    container_name: superset-init
+    depends_on:
+      superset-db:
+        condition: service_healthy
+    networks:
+      - superset-net
+    env_file:
+      - .env
+    environment:
+      SUPERSET_DATABASE_URI: postgresql+psycopg2://superset:superset@superset-db:5432/superset
+      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+      PYTHONPATH: /app/pythonpath:$PYTHONPATH
+    volumes:
+      - ./superset/superset_config.py:/app/pythonpath/superset_config.py:ro
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        superset db upgrade
+        superset init
+        # Idempotent admin creation
+        if superset fab list-users 2>/dev/null | grep -q "^username:$${SUPERSET_ADMIN_USERNAME} "; then
+          echo "admin user '$${SUPERSET_ADMIN_USERNAME}' already exists, skipping"
+        else
+          superset fab create-admin \
+            --username $${SUPERSET_ADMIN_USERNAME} \
+            --firstname $${SUPERSET_ADMIN_FIRSTNAME} \
+            --lastname $${SUPERSET_ADMIN_LASTNAME} \
+            --email $${SUPERSET_ADMIN_EMAIL} \
+            --password $${SUPERSET_ADMIN_PASSWORD}
+        fi
+    restart: "no"
+
+  superset:
+    image: apache/superset:4.0.0
+    container_name: superset
+    restart: unless-stopped
+    depends_on:
+      superset-db:
+        condition: service_healthy
+    networks:
+      - superset-net
+    ports:
+      - "8088:8088"
+    env_file:
+      - .env
+    environment:
+      SUPERSET_DATABASE_URI: postgresql+psycopg2://superset:superset@superset-db:5432/superset
+      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+      PYTHONPATH: /app/pythonpath:$PYTHONPATH
+    volumes:
+      - ./superset/superset_config.py:/app/pythonpath/superset_config.py:ro
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8088/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+      start_period: 90s
+
+networks:
+  superset-net:
+    name: superset-net
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: "2001:db8:1::/64"
+          gateway: "2001:db8:1::1"
+
+volumes:
+  superset_db:

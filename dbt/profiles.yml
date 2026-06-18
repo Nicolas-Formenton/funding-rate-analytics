@@ -11,3 +11,13 @@ funding_rate_analytics:
       schema: staging
       threads: 4
       keepalives_idle: 0
+    supabase:
+      type: postgres
+      host: db.djtnqbvkhqftmtnsityx.supabase.co
+      port: 5432
+      user: postgres
+      password: "{{ env_var('SUPABASE_DB_PASSWORD', '') }}"
+      dbname: postgres
+      schema: staging
+      threads: 4
+      keepalives_idle: 0

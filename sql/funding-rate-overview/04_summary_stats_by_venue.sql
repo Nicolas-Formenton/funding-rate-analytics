@@ -11,9 +11,9 @@
 SELECT
     venue,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
-    ROUND(PERCENTILE_CONT(0.05) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS p5_rate_bps,
-    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS p95_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.05) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS p5_rate_bps,
+    ROUND((PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS p95_rate_bps,
     COUNT(*) AS observation_count
 FROM marts.mart_daily_funding
 GROUP BY venue

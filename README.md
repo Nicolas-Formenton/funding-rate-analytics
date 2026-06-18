@@ -1,8 +1,8 @@
 # Historical Funding Rate Analytics — Crypto + Equity Perpetual Futures
 
-End-to-end data analytics on **260,961 funding rate observations** from **5 perpetual futures venues** across crypto and equity markets, built with **PostgreSQL, dbt, and Deepnote**.
+End-to-end data analytics on **260,961 funding rate observations** from **5 perpetual futures venues** across crypto and equity markets, built with **PostgreSQL, dbt, and Apache Superset**.
 
-This portfolio showcases four interactive BI dashboards backed by a dbt data pipeline, plus a Hex research report testing hypotheses about funding rate behavior.
+This portfolio showcases four interactive BI dashboards (14 charts) backed by a dbt data pipeline, plus a Hex research report testing hypotheses about funding rate behavior.
 
 ---
 
@@ -15,7 +15,7 @@ This portfolio showcases four interactive BI dashboards backed by a dbt data pip
 | 3 | **Equity vs Crypto Perps** | 13 | Weekend oracle freeze, hourly patterns, regulatory comparison |
 | 4 | **Annualized Yield Analysis** | 12 | Cumulative yield, risk-return, seasonality, negative funding |
 
-> **Live dashboards**: [Deepnote project](https://deepnote.com/workspace/Exploratory-Analysis-fb5d0c52-59fc-4f39-950c-94709466c5d9/project/Funding-Rate-Analytics-ba935e29-1cf6-4f1d-ac3a-9218b41f71dd) — 4 interactive dashboards with Plotly charts
+> **Live dashboards**: [Superset dashboards](http://localhost:8088) — 4 interactive dashboards (self-hosted, see How to Run)
 > **Research report**: [Hex project](https://app.hex.tech/019eb393-3d2c-75b8-9208-12e174506253/hex/Funding-Rate-Research-033Zf35Pwq9hRlSAvaUqPC/) — 3 statistical hypotheses tested (weekend oracle freeze, cross-venue arbitrage, mean reversion)
 
 ---
@@ -25,31 +25,41 @@ This portfolio showcases four interactive BI dashboards backed by a dbt data pip
 ```
 Binance data.vision (CSV, 2020-today)
 Hyperliquid API (hourly, 2023-today)
-Deribit API (8h, 2019-today)                    Deepnote        Hex
-Equity Perps APIs (Binance/HL-xyz/BitMEX)          ↑               ↑
-        │                                            │               │
-        ├──────────────┬──────────────┬──────────────┤               │
-        ↓              ↓              ↓              │               │
-PostgreSQL `raw` schema (4 tables, 260,961 rows)    │               │
-   ├── funding_binance (20,392)                     │               │
-   ├── funding_hyperliquid (79,776)                  │               │
-   ├── funding_deribit (124,970)                     │               │
-   └── funding_equity_perps (35,823)                 │               │
-        │                                            │               │
-        ↓                                            │               │
-dbt `staging` (1 view: stg_funding_events)          │               │
-   └── Normalized annualized rates, asset_class      │               │
-        │                                            │               │
-        ↓                                            │               │
-dbt `marts` (3 tables)                              │               │
-   ├── mart_hourly_funding (260,956 rows)            │               │
-   ├── mart_daily_funding (18,437 rows)              │               │
-   └── mart_venue_comparison (11,273 rows)           │               │
-        │                                            │               │
-        ├────────────────────────────────────────────┤               │
-        ↓                                            ↓               ↓
-4 Deepnote Dashboards                          Hex Research Report
-(51 SQL queries, Plotly charts)            (hypothesis testing, stats)
+Deribit API (8h, 2019-today)
+Equity Perps APIs (Binance/HL-xyz/BitMEX)
+        │
+        ├──────────────┬──────────────┬──────────────┐
+        ↓              ↓              ↓              ↓
+Local PostgreSQL `raw` schema (4 tables, 260,961 rows)
+   ├── funding_binance (20,392)
+   ├── funding_hyperliquid (79,776)
+   ├── funding_deribit (124,970)
+   └── funding_equity_perps (35,823)
+        │
+        ↓
+dbt `staging` (1 view: stg_funding_events)
+   └── Normalized annualized rates, asset_class
+        │
+        ↓
+dbt `marts` (3 tables)
+   ├── mart_hourly_funding (260,956 rows)
+   ├── mart_daily_funding (18,437 rows)
+   └── mart_venue_comparison (11,273 rows)
+        │
+        ↓
+push_to_supabase.py (local PG → Supabase)
+        │
+        ↓
+Supabase PostgreSQL (remote warehouse)
+        │
+        ↓
+Apache Superset (localhost:8088)          Hex
+   4 dashboards, 14 charts               ↑
+   (51 SQL queries)                      │
+        │                                │
+        └────────────────────────────────┘
+              Hex Research Report
+        (hypothesis testing, stats)
 ```
 
 **Key tables & row counts** (live snapshot from PostgreSQL):
@@ -78,10 +88,10 @@ dbt `marts` (3 tables)                              │               │
 
 - **PostgreSQL 16** — Docker container with 3 schemas: `raw`, `staging`, `marts`
 - **dbt 1.12** — staging views (rate normalization) + 3 mart tables (hourly, daily, venue comparison)
-- **Deepnote** — interactive BI dashboards with SQL blocks + Plotly visualizations + input filters
+- **Apache Superset** — interactive BI dashboards with SQL Lab + rich chart library + scheduled refresh
 - **Hex** — published research report with SQL + Python statistical testing
 - **Python 3** — ingestion scripts (Binance, Hyperliquid, Deribit, equity perps) + pytest
-- **Docker Compose** — local PostgreSQL + PGAdmin
+- **Docker Compose** — local PostgreSQL + PGAdmin, plus separate Superset compose file
 
 ---
 
@@ -89,7 +99,7 @@ dbt `marts` (3 tables)                              │               │
 
 ```
 .
-├── dashboards/                      # Deepnote project (cloud) — see URL above
+├── archive/deepnote/                # Archived Deepnote notebooks — see [archive README](archive/deepnote/README.md)
 ├── sql/                             # 51 native SQL queries, grouped by dashboard
 │   ├── funding-rate-overview/       # 12 queries
 │   ├── cross-venue-spread/          # 14 queries
@@ -126,7 +136,12 @@ dbt `marts` (3 tables)                              │               │
 │   └── supabase-setup.md
 ├── reports/
 ├── tests/                           # pytest — 7 test files
-├── docker-compose.yml
+├── superset/                        # Superset config + dashboard exports
+│   ├── superset_config.py           # Superset config (Supabase connection, caching)
+│   ├── .env.example                 # Env template (admin creds, Supabase password)
+│   └── dashboard1_export.json       # Dashboard export (importable in Superset)
+├── docker-compose.yml               # PostgreSQL + PGAdmin
+├── docker-compose.superset.yml      # Apache Superset 4.0 (localhost:8088)
 ├── requirements.txt
 ├── ACKNOWLEDGMENTS.md
 ├── LICENSE                          # MIT
@@ -144,6 +159,21 @@ The PostgreSQL database and dbt models capture these key metrics:
 - **Weekend oracle freeze**: Equity perpetuals show fundamentally different funding behavior on weekends compared to crypto perpetuals (24/7 markets)
 - **Annualized yields**: Funding rates as annualized percentages, allowing direct comparison across venues with different funding intervals (hourly, 8h, continuous)
 - **Negative funding rates**: 60,860 events show negative average rates (bps). Short positions paying longs, common during bearish sentiment
+
+---
+
+## Data Corrections
+
+Six bugs were caught and fixed during the Superset dashboard build. Documenting them here because they changed the numbers materially.
+
+| # | Bug | Symptom | Fix | Impact |
+|---|-----|---------|-----|--------|
+| 1 | **Deribit rate scale** | Deribit funding rates stored as 0.068 bps instead of ~680 bps | Multiply raw rate by 100 during ingestion | All Deribit charts were off by 100x. BTC perpetual funding looked flat when it was actually volatile |
+| 2 | **Cumulative yield annualization** | Cumulative yield computed as sum of daily annualized rates | Switch to daily-compounded: `product(1 + rate/365) - 1` | Yield curves were additive nonsense. Now they compound correctly, matching how actual funding PnL accumulates |
+| 3 | **mart_venue_comparison format** | Wide format with one column per venue | Reshape to long format with `venue_long` / `venue_short` columns | Superset couldn't filter or group by venue pair. Long format lets you slice by any venue combination |
+| 4 | **APY double-annualization** | APY computed as `spread_bps * 3.65` on already-annualized rates | Changed to `spread_bps / 100.0` (rates were already annualized in staging) | APY values were ~13x too high. A 5% spread showed as 65% APY |
+| 5 | **Hourly column naming** | Hourly mart used `timestamp` column name | Renamed to `hour_start` for clarity and consistency | Superset time-series charts need unambiguous timestamp columns. `hour_start` is explicit |
+| 6 | **arb_apy_pct hardcoded** | Arbitrage APY column was a static placeholder | Computed from actual spread data: `abs(spread_bps) / 100.0 * 365` | Arb APY now reflects real cross-venue opportunities instead of a dummy value |
 
 ---
 
@@ -179,13 +209,20 @@ cd dbt
 dbt deps
 dbt run      # ~1s, 4 models
 dbt test     # 24 tests
+cd ..
 
 # 5. Push to Supabase (for portfolio sharing)
 # Set SUPABASE_URL env var first
 python scripts/push_to_supabase.py
 
-# 6. Open Deepnote dashboards and Hex report
-# See dashboard URLs at top of this README
+# 6. Start Apache Superset
+cp superset/.env.example .env   # edit with your Supabase DB password
+docker compose -f docker-compose.superset.yml up -d
+
+# 7. Open dashboards
+# Superset: http://localhost:8088 (admin/changeme from .env)
+# 4 dashboards, 14 charts across IDs 4-7
+# Hex report: link at top of this README
 ```
 
 ---

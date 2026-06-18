@@ -16,7 +16,7 @@ SELECT 'total_observations', COUNT(*)::text FROM marts.mart_daily_funding WHERE 
 UNION ALL
 SELECT 'avg_rate_bps', ROUND(AVG(avg_rate_bps), 4)::text FROM marts.mart_daily_funding WHERE asset_class = 'equity'
 UNION ALL
-SELECT 'median_rate_bps', ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4)::text FROM marts.mart_daily_funding WHERE asset_class = 'equity'
+SELECT 'median_rate_bps', ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4)::text FROM marts.mart_daily_funding WHERE asset_class = 'equity'
 UNION ALL
 SELECT 'max_rate_bps', ROUND(MAX(avg_rate_bps), 4)::text FROM marts.mart_daily_funding WHERE asset_class = 'equity'
 UNION ALL

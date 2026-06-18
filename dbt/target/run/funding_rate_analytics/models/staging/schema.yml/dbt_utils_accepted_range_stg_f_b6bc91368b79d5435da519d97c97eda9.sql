@@ -11,7 +11,7 @@
 
 with meet_condition as(
   select *
-  from "funding_rates"."staging_staging"."stg_funding_events"
+  from "postgres"."staging"."stg_funding_events"
 ),
 
 validation_errors as (

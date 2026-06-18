@@ -12,7 +12,7 @@ SELECT
     symbol,
     venue,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
     ROUND(STDDEV(avg_rate_bps), 4) AS std_dev_bps,
     COUNT(DISTINCT date) AS total_days,
     MIN(date) AS first_date,

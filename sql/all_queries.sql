@@ -96,9 +96,9 @@ LIMIT 10;
 SELECT
     venue,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
-    ROUND(PERCENTILE_CONT(0.05) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS p5_rate_bps,
-    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS p95_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.05) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS p5_rate_bps,
+    ROUND((PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS p95_rate_bps,
     COUNT(*) AS observation_count
 FROM marts.mart_daily_funding
 GROUP BY venue
@@ -231,7 +231,7 @@ SELECT
     symbol,
     venue,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
     ROUND(STDDEV(avg_rate_bps), 4) AS std_dev_bps,
     COUNT(DISTINCT date) AS total_days,
     MIN(date) AS first_date,
@@ -320,9 +320,9 @@ ORDER BY ABS((f.avg_rate_bps - s.venue_mean) / NULLIF(s.venue_stddev, 0)) DESC;
 SELECT
     asset_class,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
-    ROUND(PERCENTILE_CONT(0.05) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS p5_rate_bps,
-    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS p95_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.05) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS p5_rate_bps,
+    ROUND((PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS p95_rate_bps,
     ROUND(STDDEV(avg_rate_bps), 4) AS std_dev_bps,
     COUNT(*) AS total_observations
 FROM marts.mart_daily_funding
@@ -409,7 +409,7 @@ SELECT
     spread_bps,
     ROUND(spread_bps / 100.0, 2) AS arb_apy_pct
 FROM marts.mart_venue_comparison
-WHERE spread_bps * 3.65 > 10.0
+WHERE spread_bps / 100.0 > 10.0
 ORDER BY arb_apy_pct DESC, date DESC;
 
 
@@ -437,7 +437,7 @@ WITH venue_pairs AS (
 SELECT
     vp.venue_a,
     vp.venue_b,
-    ROUND(CORR(a.avg_rate_bps, b.avg_rate_bps), 4) AS correlation,
+    ROUND(CORR(a.avg_rate_bps, b.avg_rate_bps)::numeric, 4) AS correlation,
     COUNT(DISTINCT a.symbol) AS shared_symbols,
     COUNT(*) AS shared_days
 FROM venue_pairs vp
@@ -579,7 +579,7 @@ SELECT
         WHEN 6 THEN 'Saturday'
     END AS day_name,
     ROUND(AVG(spread_bps), 4) AS avg_spread_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY spread_bps), 4) AS median_spread_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY spread_bps))::numeric, 4) AS median_spread_bps,
     COUNT(*) AS observation_count
 FROM marts.mart_venue_comparison
 GROUP BY EXTRACT(DOW FROM date)::int
@@ -709,8 +709,8 @@ SELECT
     venue_short,
     ROUND(AVG(spread_bps), 4) AS avg_spread_bps,
     ROUND(STDDEV(spread_bps), 4) AS spread_stddev,
-    ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(STDDEV(avg_rate_bps), 4) AS rate_stddev
+    ROUND(AVG((long_rate_bps + short_rate_bps) / 2.0), 4) AS avg_rate_bps,
+    ROUND(STDDEV((long_rate_bps + short_rate_bps) / 2.0), 4) AS rate_stddev
 FROM marts.mart_venue_comparison
 GROUP BY symbol, venue_long, venue_short
 ORDER BY avg_spread_bps DESC;
@@ -761,7 +761,7 @@ SELECT
     is_weekend,
     venue,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
     ROUND(STDDEV(avg_rate_bps), 4) AS std_dev_bps,
     COUNT(*) AS observation_count
 FROM marts.mart_daily_funding
@@ -788,7 +788,7 @@ SELECT
     is_weekend,
     venue,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
     ROUND(STDDEV(avg_rate_bps), 4) AS std_dev_bps,
     COUNT(*) AS observation_count
 FROM marts.mart_daily_funding
@@ -837,7 +837,7 @@ ORDER BY hour_of_day, asset_class;
 SELECT
     venue,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
     ROUND(STDDEV(avg_rate_bps), 4) AS std_dev_bps,
     COUNT(DISTINCT symbol) AS total_symbols,
     COUNT(DISTINCT date) AS total_days
@@ -864,7 +864,7 @@ SELECT
     RANK() OVER (ORDER BY AVG(avg_rate_bps) DESC) AS symbol_rank,
     symbol,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
     COUNT(DISTINCT venue) AS venues_count,
     COUNT(DISTINCT date) AS total_days
 FROM marts.mart_daily_funding
@@ -1044,7 +1044,7 @@ SELECT 'total_observations', COUNT(*)::text FROM marts.mart_daily_funding WHERE 
 UNION ALL
 SELECT 'avg_rate_bps', ROUND(AVG(avg_rate_bps), 4)::text FROM marts.mart_daily_funding WHERE asset_class = 'equity'
 UNION ALL
-SELECT 'median_rate_bps', ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4)::text FROM marts.mart_daily_funding WHERE asset_class = 'equity'
+SELECT 'median_rate_bps', ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4)::text FROM marts.mart_daily_funding WHERE asset_class = 'equity'
 UNION ALL
 SELECT 'max_rate_bps', ROUND(MAX(avg_rate_bps), 4)::text FROM marts.mart_daily_funding WHERE asset_class = 'equity'
 UNION ALL
@@ -1076,7 +1076,7 @@ SELECT
     TO_CHAR(DATE_TRUNC('month', date), 'YYYY-MM') AS year_month,
     asset_class,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
     ROUND(STDDEV(avg_rate_bps), 4) AS std_dev_bps,
     COUNT(*) AS observation_count
 FROM marts.mart_daily_funding
@@ -1203,7 +1203,7 @@ SELECT
     symbol,
     asset_class,
     ROUND(AVG(daily_annualized_yield_pct), 4) AS avg_annualized_yield_pct,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY daily_annualized_yield_pct), 4) AS median_yield_pct,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY daily_annualized_yield_pct))::numeric, 4) AS median_yield_pct,
     ROUND(MAX(daily_annualized_yield_pct), 4) AS max_yield_pct,
     ROUND(MIN(daily_annualized_yield_pct), 4) AS min_yield_pct,
     COUNT(DISTINCT date) AS total_days
@@ -1282,15 +1282,11 @@ ORDER BY sharpe_like_ratio DESC NULLS LAST;
 
 SELECT
     venue,
-    ROUND(PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY daily_annualized_yield_pct), 4) AS q1_yield_pct,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY daily_annualized_yield_pct), 4) AS q2_yield_pct,
-    ROUND(PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY daily_annualized_yield_pct), 4) AS q3_yield_pct,
-    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY daily_annualized_yield_pct), 4) AS q4_yield_pct,
-    ROUND(
-        PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY daily_annualized_yield_pct)
-        - PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY daily_annualized_yield_pct),
-        4
-    ) AS iqr_pct
+    ROUND((PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY daily_annualized_yield_pct))::numeric, 4) AS q1_yield_pct,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY daily_annualized_yield_pct))::numeric, 4) AS q2_yield_pct,
+    ROUND((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY daily_annualized_yield_pct))::numeric, 4) AS q3_yield_pct,
+    ROUND((PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY daily_annualized_yield_pct))::numeric, 4) AS q4_yield_pct,
+    ROUND((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY daily_annualized_yield_pct) - PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY daily_annualized_yield_pct))::numeric, 4) AS iqr_pct
 FROM marts.mart_daily_funding
 GROUP BY venue
 ORDER BY q2_yield_pct DESC;
@@ -1412,7 +1408,7 @@ SELECT
     EXTRACT(MONTH FROM date)::int AS month_num,
     TO_CHAR(DATE_TRUNC('month', date), 'Month') AS month_name,
     ROUND(AVG(daily_annualized_yield_pct), 4) AS avg_yield_pct,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY daily_annualized_yield_pct), 4) AS median_yield_pct,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY daily_annualized_yield_pct))::numeric, 4) AS median_yield_pct,
     COUNT(*) AS observation_count
 FROM marts.mart_daily_funding
 GROUP BY EXTRACT(MONTH FROM date), TO_CHAR(DATE_TRUNC('month', date), 'Month')

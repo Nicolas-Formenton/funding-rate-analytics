@@ -10,7 +10,7 @@ WITH daily_agg AS (
         STDDEV(funding_rate_annualized_pct) * 100 AS rate_volatility,
         AVG(premium_bps) AS avg_premium_bps,
         AVG(funding_rate_annualized_pct) AS daily_annualized_yield_pct
-    FROM "funding_rates"."staging_staging"."stg_funding_events"
+    FROM "postgres"."staging"."stg_funding_events"
     WHERE funding_rate_annualized_pct IS NOT NULL
     GROUP BY 1, 2, 3, 4
 )

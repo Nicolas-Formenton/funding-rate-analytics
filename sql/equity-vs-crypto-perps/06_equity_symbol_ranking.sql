@@ -12,7 +12,7 @@ SELECT
     RANK() OVER (ORDER BY AVG(avg_rate_bps) DESC) AS symbol_rank,
     symbol,
     ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps), 4) AS median_rate_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY avg_rate_bps))::numeric, 4) AS median_rate_bps,
     COUNT(DISTINCT venue) AS venues_count,
     COUNT(DISTINCT date) AS total_days
 FROM marts.mart_daily_funding

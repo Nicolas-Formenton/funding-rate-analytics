@@ -19,7 +19,7 @@ WITH venue_pairs AS (
 SELECT
     vp.venue_a,
     vp.venue_b,
-    ROUND(CORR(a.avg_rate_bps, b.avg_rate_bps), 4) AS correlation,
+    ROUND(CORR(a.avg_rate_bps, b.avg_rate_bps)::numeric, 4) AS correlation,
     COUNT(DISTINCT a.symbol) AS shared_symbols,
     COUNT(*) AS shared_days
 FROM venue_pairs vp

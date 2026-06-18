@@ -2,7 +2,7 @@
   
     
 
-  create  table "funding_rates"."staging_marts"."mart_daily_funding__dbt_tmp"
+  create  table "postgres"."marts"."mart_daily_funding__dbt_tmp"
   
   
     as
@@ -20,7 +20,7 @@
         STDDEV(funding_rate_annualized_pct) * 100 AS rate_volatility,
         AVG(premium_bps) AS avg_premium_bps,
         AVG(funding_rate_annualized_pct) AS daily_annualized_yield_pct
-    FROM "funding_rates"."staging_staging"."stg_funding_events"
+    FROM "postgres"."staging"."stg_funding_events"
     WHERE funding_rate_annualized_pct IS NOT NULL
     GROUP BY 1, 2, 3, 4
 )

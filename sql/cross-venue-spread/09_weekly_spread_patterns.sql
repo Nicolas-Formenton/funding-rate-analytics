@@ -20,7 +20,7 @@ SELECT
         WHEN 6 THEN 'Saturday'
     END AS day_name,
     ROUND(AVG(spread_bps), 4) AS avg_spread_bps,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY spread_bps), 4) AS median_spread_bps,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY spread_bps))::numeric, 4) AS median_spread_bps,
     COUNT(*) AS observation_count
 FROM marts.mart_venue_comparison
 GROUP BY EXTRACT(DOW FROM date)::int

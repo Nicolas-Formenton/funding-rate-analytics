@@ -15,8 +15,8 @@ SELECT
     venue_short,
     ROUND(AVG(spread_bps), 4) AS avg_spread_bps,
     ROUND(STDDEV(spread_bps), 4) AS spread_stddev,
-    ROUND(AVG(avg_rate_bps), 4) AS avg_rate_bps,
-    ROUND(STDDEV(avg_rate_bps), 4) AS rate_stddev
+    ROUND(AVG((long_rate_bps + short_rate_bps) / 2.0), 4) AS avg_rate_bps,
+    ROUND(STDDEV((long_rate_bps + short_rate_bps) / 2.0), 4) AS rate_stddev
 FROM marts.mart_venue_comparison
 GROUP BY symbol, venue_long, venue_short
 ORDER BY avg_spread_bps DESC;

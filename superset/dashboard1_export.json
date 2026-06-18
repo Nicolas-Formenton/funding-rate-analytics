@@ -1,0 +1,58 @@
+{
+  "dashboard": {
+    "id": 1,
+    "title": "Funding Rate Overview",
+    "slug": "funding-rate-overview",
+    "published": true,
+    "url": "http://localhost:8088/superset/dashboard/1/"
+  },
+  "charts": [
+    {
+      "id": 3,
+      "name": "Daily Funding Rate Trend",
+      "viz_type": "echarts_timeseries_line",
+      "description": "Average daily funding rate (bps) by venue over time"
+    },
+    {
+      "id": 4,
+      "name": "Top 10 Funding Rate Events",
+      "viz_type": "table",
+      "description": "Top 10 highest absolute funding rate events"
+    },
+    {
+      "id": 5,
+      "name": "Rate Distribution by Venue",
+      "viz_type": "box_plot",
+      "description": "Box plot showing funding rate distribution per venue"
+    },
+    {
+      "id": 6,
+      "name": "Volatility Over Time (7d Rolling Std)",
+      "viz_type": "echarts_timeseries_line",
+      "description": "Rate volatility over time by venue"
+    }
+  ],
+  "dataset": {
+    "id": 3,
+    "schema": "marts",
+    "table_name": "mart_daily_funding",
+    "database_id": 2,
+    "database_name": "Supabase Funding Rate",
+    "columns": ["date", "venue", "symbol", "avg_rate_bps", "asset_class", "min_rate_bps", "max_rate_bps", "rate_volatility", "avg_premium_bps", "is_weekend", "daily_annualized_yield_pct"]
+  },
+  "layout": {
+    "type": "grid",
+    "rows": [
+      {
+        "charts": ["Daily Funding Rate Trend", "Top 10 Funding Rate Events"],
+        "width": "50/50"
+      },
+      {
+        "charts": ["Rate Distribution by Venue", "Volatility Over Time (7d Rolling Std)"],
+        "width": "50/50"
+      }
+    ]
+  },
+  "created_at": "2026-06-17",
+  "created_via": "Superset Python API (docker exec)"
+}

@@ -12,7 +12,7 @@ SELECT
     symbol,
     asset_class,
     ROUND(AVG(daily_annualized_yield_pct), 4) AS avg_annualized_yield_pct,
-    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY daily_annualized_yield_pct), 4) AS median_yield_pct,
+    ROUND((PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY daily_annualized_yield_pct))::numeric, 4) AS median_yield_pct,
     ROUND(MAX(daily_annualized_yield_pct), 4) AS max_yield_pct,
     ROUND(MIN(daily_annualized_yield_pct), 4) AS min_yield_pct,
     COUNT(DISTINCT date) AS total_days

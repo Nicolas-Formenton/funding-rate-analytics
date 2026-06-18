@@ -2,7 +2,7 @@
   
     
 
-  create  table "funding_rates"."staging_marts"."mart_hourly_funding__dbt_tmp"
+  create  table "postgres"."marts"."mart_hourly_funding__dbt_tmp"
   
   
     as
@@ -21,7 +21,7 @@
     AVG(premium_bps) AS avg_premium_bps,
     AVG(mark_price) AS avg_mark_price,
     AVG(index_price) AS avg_index_price
-FROM "funding_rates"."staging_staging"."stg_funding_events"
+FROM "postgres"."staging"."stg_funding_events"
 WHERE funding_rate_annualized_pct IS NOT NULL
 GROUP BY 1, 2, 3, 4
   );

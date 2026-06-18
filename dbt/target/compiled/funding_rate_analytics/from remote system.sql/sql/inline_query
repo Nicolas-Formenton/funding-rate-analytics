@@ -1,0 +1,1 @@
+SELECT date, ROUND(spread_bps, 2) AS spread_bps, arb_apy_pct, ROUND(spread_bps / 100.0, 2) AS expected_apy FROM staging_marts.mart_venue_comparison WHERE venue_long = 'deribit' AND venue_short = 'hyperliquid' AND symbol = 'BTC' ORDER BY date DESC
